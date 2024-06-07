@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import sideproject.gugumo.domain.dto.CustomUserDetails;
+import sideproject.gugumo.domain.dto.NotificationDto;
 import sideproject.gugumo.domain.entity.Member;
 import sideproject.gugumo.domain.entity.Notification;
 import sideproject.gugumo.repository.EmitterRepository;
@@ -22,6 +23,8 @@ public class NotificationService {
     private final EmitterRepository emitterRepository;
 
     public SseEmitter subscribe(CustomUserDetails principal, String lastEventId) {
+
+
 
         String emitterId = principal.getUsername() + "_" + System.currentTimeMillis();
 
@@ -45,27 +48,26 @@ public class NotificationService {
     }
 
 
-    //TODO: 미완성
-//    public void send(Member receiver, String content, Long commentId) {
-//
-//        Notification notification = Notification.builder()
-//                .member(receiver)
-//                .content(content)
-//                .commentId(commentId)
-//                .build();
-//
-//        notificationRepository.save(notification);
-//
-//        String receiverEmail = receiver.getUsername();
-//        String eventId = receiverEmail + "_" + System.currentTimeMillis();
-//        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverEmail);
-//        emitters.forEach(
-//                (key, emitter) -> {
-//                    emitterRepository.saveEventCache(key, notification);
-//                    sendNotification(emitter, eventId, key, NotifyDto.Response.createResponse(notification));
-//                }
-//        );
-//    }
+
+    public void send(Member receiver, String content) {
+
+        Notification notification = Notification.builder()
+                .member(receiver)
+                .content(content)
+                .build();
+
+        notificationRepository.save(notification);
+
+        String receiverEmail = receiver.getUsername();
+        String eventId = receiverEmail + "_" + System.currentTimeMillis();
+        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverEmail);
+        emitters.forEach(
+                (key, emitter) -> {
+                    emitterRepository.saveEventCache(key, notification);
+                    sendNotification(emitter, eventId, key, NotificationDto.createResponse(notification));
+                }
+        );
+    }
 
     private boolean hasLostData(String lastEventId) {
         return !lastEventId.isEmpty();
