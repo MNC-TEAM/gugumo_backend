@@ -19,8 +19,6 @@ public class Notification {
 
     private String content;
 
-    //알림의 원인이 되는 댓글의 고유 번호
-    private Long commentId;
 
     @Builder.Default
     private boolean isRead = false;
