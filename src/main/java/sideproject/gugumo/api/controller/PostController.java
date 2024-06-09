@@ -8,7 +8,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import sideproject.gugumo.domain.dto.CustomUserDetails;
+import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.dto.detailpostdto.DetailPostDto;
 import sideproject.gugumo.domain.dto.simplepostdto.SimplePostDto;
 import sideproject.gugumo.page.PageCustom;
@@ -16,6 +16,8 @@ import sideproject.gugumo.request.CreatePostReq;
 import sideproject.gugumo.request.UpdatePostReq;
 import sideproject.gugumo.response.ApiResponse;
 import sideproject.gugumo.service.PostService;
+
+import java.util.List;
 
 
 /**
@@ -95,6 +97,12 @@ public class PostController {
             @RequestParam(required = false, value = "q", defaultValue = "") String q) {
         return ApiResponse.createSuccess(postService.findMyPost(principal, pageable, q));
 
+    }
+
+    @GetMapping("/recommend")
+    public <T extends SimplePostDto> ApiResponse<List<T>> findRecommendPost(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ApiResponse.createSuccess(postService.findRecommendPost(principal));
     }
 
 

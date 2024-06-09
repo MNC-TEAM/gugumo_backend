@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import sideproject.gugumo.domain.dto.MemberDto;
-import sideproject.gugumo.domain.dto.SignUpMemberDto;
-import sideproject.gugumo.domain.entity.MemberStatus;
+import sideproject.gugumo.domain.dto.memberDto.MemberDto;
+import sideproject.gugumo.domain.dto.memberDto.SignUpMemberDto;
+import sideproject.gugumo.domain.entity.member.MemberStatus;
 import sideproject.gugumo.exception.exception.DuplicateEmailException;
 import sideproject.gugumo.exception.exception.DuplicateNicknameException;
 

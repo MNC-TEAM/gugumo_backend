@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import sideproject.gugumo.domain.dto.EmailCheckDto;
-import sideproject.gugumo.domain.dto.EmailRequestDto;
+import sideproject.gugumo.domain.dto.emailDto.EmailCheckDto;
+import sideproject.gugumo.domain.dto.emailDto.EmailRequestDto;
 import sideproject.gugumo.response.ApiResponse;
 import sideproject.gugumo.service.MailSenderService;
 
@@ -27,7 +27,7 @@ public class MailController {
     @PostMapping("/api/v1/mailAuthCheck")
     public ApiResponse<String> AuthCheck(@RequestBody @Valid EmailCheckDto emailCheckDto) {
 
-        boolean checked = mailService.checkAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
+        boolean checked = mailService.checkAuthNum(emailCheckDto.getEmail(), emailCheckDto.getEmailAuthNum());
 
         if(checked) {
             return ApiResponse.createSuccess("인증 완료.");

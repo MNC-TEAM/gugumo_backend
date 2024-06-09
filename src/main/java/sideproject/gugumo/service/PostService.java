@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import sideproject.gugumo.cond.PostSearchCondition;
 import sideproject.gugumo.cond.SortType;
 import sideproject.gugumo.domain.dto.simplepostdto.SimplePostQueryDto;
-import sideproject.gugumo.domain.entity.MemberStatus;
+import sideproject.gugumo.domain.entity.member.MemberStatus;
 import sideproject.gugumo.domain.entity.meeting.*;
-import sideproject.gugumo.domain.dto.CustomUserDetails;
+import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.dto.detailpostdto.DetailPostDto;
-import sideproject.gugumo.domain.entity.Member;
+import sideproject.gugumo.domain.entity.member.Member;
 import sideproject.gugumo.domain.entity.post.Post;
 import sideproject.gugumo.domain.dto.detailpostdto.LongDetailPostDto;
 import sideproject.gugumo.domain.dto.detailpostdto.ShortDetailPostDto;
@@ -33,6 +33,7 @@ import sideproject.gugumo.request.UpdatePostReq;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -170,49 +171,9 @@ public class PostService {
 
     }
 
-    private <T extends SimplePostDto> T convertToTransDto(SimplePostQueryDto s) {
-
-        SimplePostDto result = new SimplePostDto();
-
-        if (s.getMeetingType() == MeetingType.SHORT) {
-            result = SimplePostShortDto.builder()
-                    .postId(s.getPostId())
-                    .meetingStatus(s.getStatus())
-                    .gameType(s.getGameType())
-                    .location(s.getLocation())
-                    .title(s.getTitle())
-                    .meetingMemberNum(s.getMeetingMemberNum())
-                    .meetingDeadline(s.getMeetingDeadline())
-                    .isBookmarked(s.isBookmarked())
-                    .meetingDateTime(s.getMeetingDateTime())
-                    .build();
-
-
-
-        } else if (s.getMeetingType() == MeetingType.LONG) {
-            result = SimplePostLongDto.builder()
-                    .postId(s.getPostId())
-                    .meetingStatus(s.getStatus())
-                    .gameType(s.getGameType())
-                    .location(s.getLocation())
-                    .title(s.getTitle())
-                    .meetingMemberNum(s.getMeetingMemberNum())
-                    .meetingDeadline(s.getMeetingDeadline())
-                    .isBookmarked(s.isBookmarked())
-                    .meetingTime(s.getMeetingDateTime().toLocalTime())
-                    .meetingDays(s.getMeetingDays())
-                    .build();
-
-
-
-
-        }
-
-        return (T) result;
-    }
-
 
     //장기, 단기에 따라 dto를 나눠서 전송
+
     @Transactional          //viewCount++가 동작하므로 readonly=false
     public <T extends DetailPostDto> T findDetailPostByPostId(CustomUserDetails principal, Long postId) {
 
@@ -292,7 +253,6 @@ public class PostService {
 
 
     }
-
     @Transactional
     public void update(CustomUserDetails principal, Long postId, UpdatePostReq updatePostReq) {
         //토큰에서
@@ -384,6 +344,75 @@ public class PostService {
 
         return new PageCustom<>(result, page.getPageable(), page.getTotalElements());
 
+    }
+
+    public <T extends SimplePostDto> List<T> findRecommendPost(CustomUserDetails principal) {
+        //토큰에서
+
+        Member member;
+
+        if (principal == null) {
+            member = null;
+        } else {
+            member=memberRepository.findByUsername(principal.getUsername())
+                    .orElseThrow(()->
+                            new NoAuthorizationException("추천 글 조회 실패: 접근 권한이 없습니다.")
+                    );
+
+            if (member.getStatus() != MemberStatus.active) {
+                member = null;
+            }
+
+        }
+
+        List<SimplePostQueryDto> recommendPost = postRepository.findRecommendPost(member);
+
+
+        return recommendPost.stream()
+                .map(p -> convertToTransDto(p))
+                .map(r -> (T) r)
+                .collect(Collectors.toList());
+    }
+
+    private <T extends SimplePostDto> T convertToTransDto(SimplePostQueryDto s) {
+
+        SimplePostDto result = new SimplePostDto();
+
+        if (s.getMeetingType() == MeetingType.SHORT) {
+            result = SimplePostShortDto.builder()
+                    .postId(s.getPostId())
+                    .meetingStatus(s.getStatus())
+                    .gameType(s.getGameType())
+                    .location(s.getLocation())
+                    .title(s.getTitle())
+                    .meetingMemberNum(s.getMeetingMemberNum())
+                    .meetingDeadline(s.getMeetingDeadline())
+                    .isBookmarked(s.isBookmarked())
+                    .meetingDateTime(s.getMeetingDateTime())
+                    .build();
+
+
+
+        } else if (s.getMeetingType() == MeetingType.LONG) {
+            result = SimplePostLongDto.builder()
+                    .postId(s.getPostId())
+                    .meetingStatus(s.getStatus())
+                    .gameType(s.getGameType())
+                    .location(s.getLocation())
+                    .title(s.getTitle())
+                    .meetingMemberNum(s.getMeetingMemberNum())
+                    .meetingDeadline(s.getMeetingDeadline())
+                    .isBookmarked(s.isBookmarked())
+                    .meetingTime(s.getMeetingDateTime().toLocalTime())
+                    .meetingDays(s.getMeetingDays())
+                    .build();
+
+
+
+
+        }
+
+        return (T) result;
     }
 
     private <T extends SimplePostDto> T convertToTransDto(Post post, Member member) {
