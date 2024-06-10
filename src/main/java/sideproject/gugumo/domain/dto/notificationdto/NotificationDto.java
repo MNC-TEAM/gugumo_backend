@@ -1,16 +1,21 @@
-package sideproject.gugumo.domain.dto;
+package sideproject.gugumo.domain.dto.notificationdto;
 
 import lombok.*;
-import sideproject.gugumo.domain.entity.Notification;
+import lombok.experimental.SuperBuilder;
+import sideproject.gugumo.domain.entity.notification.Notification;
+
+import java.time.LocalDateTime;
 
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NotificationDto {
 
     private Long id;
     private String name;
     private String content;
+    private LocalDateTime createDate;
 
 
     public static NotificationDto createResponse(Notification notification) {
@@ -18,6 +23,7 @@ public class NotificationDto {
                 .id(notification.getId())
                 .name(notification.getMember().getNickname())
                 .content(notification.getContent())
+                .createDate(notification.getCreateDate())
                 .build();
     }
 
