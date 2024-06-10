@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sideproject.gugumo.aop.annotation.NeedNotify;
 import sideproject.gugumo.domain.dto.CmntDto;
 import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.entity.Cmnt;
@@ -31,8 +32,12 @@ public class CmntService {
     private final CmntRepository cmntRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final NotificationService notificationService;
+
+
 
     @Transactional
+//    @NeedNotify     //TODO: 가능하면 AOP로 알림을 보내도록 설계하고 싶다
     public void save(CreateCmntReq req, CustomUserDetails principal) {
 
         Member author = checkMemberValid(principal, "댓글 등록 실패: 비로그인 사용자입니다.",
@@ -56,6 +61,13 @@ public class CmntService {
 
         cmntRepository.save(cmnt);
         targetPost.increaseCommentCnt();
+
+
+        //댓글 작성자가 게시글 작성자 본인이 아닐 경우 게시글 작성자에게 알림 전송
+        //
+        if (!targetPost.getMember().equals(author)) {
+            notificationService.send(targetPost.getMember(), cmnt.getContent(), "게시글에 새 댓글이 작성되었습니다");
+        }
 
     }
 

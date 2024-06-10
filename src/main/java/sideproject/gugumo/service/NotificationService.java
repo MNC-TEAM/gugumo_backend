@@ -3,10 +3,12 @@ package sideproject.gugumo.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import sideproject.gugumo.domain.dto.CustomUserDetails;
-import sideproject.gugumo.domain.dto.NotificationDto;
-import sideproject.gugumo.domain.entity.Member;
-import sideproject.gugumo.domain.entity.Notification;
+import sideproject.gugumo.domain.dto.notificationdto.NotificationDto;
+import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
+import sideproject.gugumo.domain.dto.notificationdto.PostNotificationDto;
+import sideproject.gugumo.domain.entity.member.Member;
+import sideproject.gugumo.domain.entity.notification.Notification;
+import sideproject.gugumo.domain.entity.notification.PostNotification;
 import sideproject.gugumo.repository.EmitterRepository;
 import sideproject.gugumo.repository.NotificationRepository;
 
@@ -49,11 +51,12 @@ public class NotificationService {
 
 
 
-    public void send(Member receiver, String content) {
+    public void send(Member receiver, String content, String message) {
 
         Notification notification = Notification.builder()
                 .member(receiver)
                 .content(content)
+                .message(message)
                 .build();
 
         notificationRepository.save(notification);
@@ -65,6 +68,36 @@ public class NotificationService {
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
                     sendNotification(emitter, eventId, key, NotificationDto.createResponse(notification));
+                }
+        );
+    }
+
+
+    public void send(Member receiver, String content, String message, Long postId) {
+
+        PostNotification notification = PostNotification.builder()
+                .member(receiver)
+                .content(content)
+                .message(message)
+                .postId(postId)
+                .build();
+
+        notificationRepository.save(notification);
+
+        String receiverEmail = receiver.getUsername();
+        String eventId = receiverEmail + "_" + System.currentTimeMillis();
+        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverEmail);
+        emitters.forEach(
+                (key, emitter) -> {
+                    emitterRepository.saveEventCache(key, notification);
+                    PostNotificationDto resp = PostNotificationDto.builder()
+                            .id(notification.getId())
+                            .name(notification.getMember().getNickname())
+                            .content(notification.getContent())
+                            .createDate(notification.getCreateDate())
+                            .postId(notification.getPostId())
+                            .build();
+                    sendNotification(emitter, eventId, key, resp);
                 }
         );
     }
