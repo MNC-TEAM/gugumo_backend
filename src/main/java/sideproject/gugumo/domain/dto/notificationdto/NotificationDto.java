@@ -1,5 +1,7 @@
 package sideproject.gugumo.domain.dto.notificationdto;
 
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import sideproject.gugumo.domain.entity.notification.Notification;
@@ -16,6 +18,7 @@ public class NotificationDto {
     private String name;
     private String content;
     private LocalDateTime createDate;
+    private boolean isRead;
 
 
     public static NotificationDto createResponse(Notification notification) {
@@ -24,6 +27,7 @@ public class NotificationDto {
                 .name(notification.getMember().getNickname())
                 .content(notification.getContent())
                 .createDate(notification.getCreateDate())
+                .isRead(notification.isRead())
                 .build();
     }
 
