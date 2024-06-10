@@ -2,6 +2,7 @@ package sideproject.gugumo.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import sideproject.gugumo.domain.dto.notificationdto.NotificationDto;
 import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
@@ -50,7 +51,7 @@ public class NotificationService {
     }
 
 
-
+    @Transactional
     public void send(Member receiver, String content, String message) {
 
         Notification notification = Notification.builder()
@@ -72,7 +73,7 @@ public class NotificationService {
         );
     }
 
-
+    @Transactional
     public void send(Member receiver, String content, String message, Long postId) {
 
         PostNotification notification = PostNotification.builder()
