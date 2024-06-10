@@ -1,6 +1,7 @@
 package sideproject.gugumo.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NotificationService {
 
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
@@ -25,6 +27,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
 
+    @Transactional
     public SseEmitter subscribe(CustomUserDetails principal, String lastEventId) {
 
 

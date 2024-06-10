@@ -66,7 +66,7 @@ public class CmntService {
         //댓글 작성자가 게시글 작성자 본인이 아닐 경우 게시글 작성자에게 알림 전송
         //
         if (!targetPost.getMember().equals(author)) {
-            notificationService.send(targetPost.getMember(), cmnt.getContent(), "게시글에 새 댓글이 작성되었습니다");
+            notificationService.send(targetPost.getMember(), cmnt.getContent(), "게시글에 새 댓글이 작성되었습니다", targetPost.getId());
         }
 
     }
