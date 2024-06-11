@@ -5,6 +5,7 @@ import jakarta.persistence.InheritanceType;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import sideproject.gugumo.domain.entity.notification.Notification;
+import sideproject.gugumo.domain.entity.notification.NotificationType;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,7 @@ public class NotificationDto {
     private Long id;
     private String name;
     private String content;
+    private NotificationType notificationType;
     private String message;
     private LocalDateTime createDate;
     private boolean isRead;

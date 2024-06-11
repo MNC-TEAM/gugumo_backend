@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 //당연히 이걸 직접 보내지 않음
 @Entity
 @Getter
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -28,6 +28,7 @@ public class Notification {
 
     private String message;
 
+    private NotificationType notificationType;
 
     @Builder.Default
     private boolean isRead = false;
@@ -38,5 +39,9 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;      //알림 수신자
+
+    //postNoti
+    private Long postId;
+    private String senderNick;
 
 }

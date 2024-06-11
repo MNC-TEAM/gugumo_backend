@@ -28,6 +28,11 @@ public class NotificationController {
         return notificationService.subscribe(principal, lastEventId);
     }
 
+    @GetMapping("/notification")
+    public <T extends NotificationDto> ApiResponse<List<T>> findNoti(@AuthenticationPrincipal CustomUserDetails principal) {
+        return ApiResponse.createSuccess(notificationService.findNotification(principal));
+    }
+
     @DeleteMapping("/notification/{noti_id}")
     public ApiResponse<String> deleteNoti(@AuthenticationPrincipal CustomUserDetails principal,
                                           @PathVariable("noti_id") Long id) {

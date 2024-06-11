@@ -12,7 +12,7 @@ import sideproject.gugumo.domain.dto.notificationdto.PostNotificationDto;
 import sideproject.gugumo.domain.entity.member.Member;
 import sideproject.gugumo.domain.entity.member.MemberStatus;
 import sideproject.gugumo.domain.entity.notification.Notification;
-import sideproject.gugumo.domain.entity.notification.PostNotification;
+import sideproject.gugumo.domain.entity.notification.NotificationType;
 import sideproject.gugumo.exception.exception.NoAuthorizationException;
 import sideproject.gugumo.exception.exception.NotificationNotFoundException;
 import sideproject.gugumo.repository.EmitterRepository;
@@ -22,6 +22,7 @@ import sideproject.gugumo.repository.NotificationRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -92,13 +93,15 @@ public class NotificationService {
         );
     }
 
+    //게시글 관련 정보 전송
     @Transactional
     public void send(Member receiver, String content, String message, Long postId, String senderNick) {
 
-        PostNotification notification = PostNotification.builder()
+        Notification notification = Notification.builder()
                 .member(receiver)
                 .content(content)
                 .message(message)
+                .notificationType(NotificationType.POST)
                 .postId(postId)
                 .senderNick(senderNick)
                 .build();
@@ -111,11 +114,11 @@ public class NotificationService {
         emitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
-                    PostNotificationDto resp = PostNotificationDto.builder()
+                    Notification resp = Notification.builder()
                             .id(notification.getId())
-                            .name(notification.getMember().getNickname())
                             .content(notification.getContent())
                             .message(notification.getMessage())
+                            .notificationType(NotificationType.POST)
                             .createDate(notification.getCreateDate())
                             .postId(notification.getPostId())
                             .senderNick(notification.getSenderNick())
@@ -124,6 +127,40 @@ public class NotificationService {
                 }
         );
     }
+
+    public <T extends NotificationDto> List<T> findNotification(@AuthenticationPrincipal CustomUserDetails principal) {
+
+        Member member = checkMemberValid(principal, "알림 조회 실패: 비로그인 사용자입니다.",
+                "알림 조회 실패: 권한이 없습니다.");
+
+        List<Notification> result = notificationRepository.findByMember(member);
+
+        return result.stream()
+                .map(n -> convertToDto(n))
+                .map(n -> (T) n)
+                .collect(Collectors.toList());
+    }
+
+    public <T extends NotificationDto> T convertToDto(Notification notification) {
+
+        if (notification.getNotificationType() == NotificationType.POST) {
+            return (T) PostNotificationDto.builder()
+                    .id(notification.getId())
+                    .name(notification.getMember().getNickname())
+                    .content(notification.getContent())
+                    .notificationType(NotificationType.POST)
+                    .message(notification.getMessage())
+                    .createDate(notification.getCreateDate())
+                    .isRead(notification.isRead())
+                    .senderNick(notification.getSenderNick())
+                    .postId(notification.getPostId())
+                    .build();
+        } else {
+            return null;
+        }
+
+    }
+
 
     public void deleteNotification(@AuthenticationPrincipal CustomUserDetails principal, Long id) {
         Member member = checkMemberValid(principal, "알림 삭제 실패: 비로그인 사용자입니다.",
