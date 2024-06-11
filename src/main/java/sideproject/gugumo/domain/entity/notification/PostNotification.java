@@ -17,4 +17,5 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorValue("P")
 public class PostNotification extends Notification{
     private Long postId;
+    private String senderNick;
 }

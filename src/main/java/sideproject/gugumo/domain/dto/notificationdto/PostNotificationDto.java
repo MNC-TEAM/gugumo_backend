@@ -12,4 +12,5 @@ import lombok.experimental.SuperBuilder;
 public class PostNotificationDto extends NotificationDto{
 
     private Long postId;
+    private String senderNick;
 }

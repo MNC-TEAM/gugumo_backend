@@ -17,18 +17,10 @@ public class NotificationDto {
     private Long id;
     private String name;
     private String content;
+    private String message;
     private LocalDateTime createDate;
     private boolean isRead;
 
 
-    public static NotificationDto createResponse(Notification notification) {
-        return NotificationDto.builder()
-                .id(notification.getId())
-                .name(notification.getMember().getNickname())
-                .content(notification.getContent())
-                .createDate(notification.getCreateDate())
-                .isRead(notification.isRead())
-                .build();
-    }
 
 }

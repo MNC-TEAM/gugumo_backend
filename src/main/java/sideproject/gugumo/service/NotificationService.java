@@ -2,6 +2,7 @@ package sideproject.gugumo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -9,12 +10,17 @@ import sideproject.gugumo.domain.dto.notificationdto.NotificationDto;
 import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.dto.notificationdto.PostNotificationDto;
 import sideproject.gugumo.domain.entity.member.Member;
+import sideproject.gugumo.domain.entity.member.MemberStatus;
 import sideproject.gugumo.domain.entity.notification.Notification;
 import sideproject.gugumo.domain.entity.notification.PostNotification;
+import sideproject.gugumo.exception.exception.NoAuthorizationException;
+import sideproject.gugumo.exception.exception.NotificationNotFoundException;
 import sideproject.gugumo.repository.EmitterRepository;
+import sideproject.gugumo.repository.MemberRepository;
 import sideproject.gugumo.repository.NotificationRepository;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -24,6 +30,7 @@ public class NotificationService {
 
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
 
+    private final MemberRepository memberRepository;
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
 
@@ -46,6 +53,7 @@ public class NotificationService {
 
         // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
         if (hasLostData(lastEventId)) {
+            log.info("sendLostData={}", lastEventId);
             sendLostData(lastEventId, principal.getUsername(), emitterId, emitter);
         }
 
@@ -71,19 +79,28 @@ public class NotificationService {
         emitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
-                    sendNotification(emitter, eventId, key, NotificationDto.createResponse(notification));
+                    NotificationDto resp = NotificationDto.builder()
+                            .id(notification.getId())
+                            .name(notification.getMember().getNickname())
+                            .content(notification.getContent())
+                            .message(notification.getMessage())
+                            .createDate(notification.getCreateDate())
+                            .isRead(notification.isRead())
+                            .build();
+                    sendNotification(emitter, eventId, key, resp);
                 }
         );
     }
 
     @Transactional
-    public void send(Member receiver, String content, String message, Long postId) {
+    public void send(Member receiver, String content, String message, Long postId, String senderNick) {
 
         PostNotification notification = PostNotification.builder()
                 .member(receiver)
                 .content(content)
                 .message(message)
                 .postId(postId)
+                .senderNick(senderNick)
                 .build();
 
         notificationRepository.save(notification);
@@ -98,8 +115,10 @@ public class NotificationService {
                             .id(notification.getId())
                             .name(notification.getMember().getNickname())
                             .content(notification.getContent())
+                            .message(notification.getMessage())
                             .createDate(notification.getCreateDate())
                             .postId(notification.getPostId())
+                            .senderNick(notification.getSenderNick())
                             .build();
                     sendNotification(emitter, eventId, key, resp);
                 }
@@ -138,7 +157,7 @@ public class NotificationService {
     }
 
     private void sendLostData(String lastEventId, String userEmail, String emitterId, SseEmitter emitter) {
-        Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByMemberId(String.valueOf(userEmail));
+        Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByMemberId(userEmail);
         eventCaches.entrySet().stream()
                 .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
                 .forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
