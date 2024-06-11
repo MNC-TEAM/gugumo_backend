@@ -106,6 +106,33 @@ public class NotificationService {
         );
     }
 
+    public void deleteNotification(@AuthenticationPrincipal CustomUserDetails principal, Long id) {
+        Member member = checkMemberValid(principal, "알림 삭제 실패: 비로그인 사용자입니다.",
+                "알림 삭제 실패: 권한이 없습니다.");
+
+        Notification notification = notificationRepository.findById(id).orElseThrow(
+                ()->new NotificationNotFoundException("알림 삭제 실패: 존재하지 않는 알림입니다.")
+        );
+
+        notificationRepository.delete(notification);
+
+    }
+
+    private Member checkMemberValid(CustomUserDetails principal, String noLoginMessage, String notValidUserMessage) {
+        if (principal == null) {
+            throw new NoAuthorizationException(noLoginMessage);
+        }
+
+        Member author = memberRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new NoAuthorizationException(notValidUserMessage));
+
+        if (author.getStatus() != MemberStatus.active) {
+            throw new NoAuthorizationException(notValidUserMessage);
+        }
+        return author;
+    }
+
+
     private boolean hasLostData(String lastEventId) {
         return !lastEventId.isEmpty();
     }

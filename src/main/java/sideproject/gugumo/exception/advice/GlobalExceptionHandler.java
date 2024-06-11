@@ -40,6 +40,13 @@ public class GlobalExceptionHandler {
         return ApiResponse.createFail(e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = {NotificationNotFoundException.class})
+    public ApiResponse<String> handleNotificationNotFoundException(NotificationNotFoundException e) {
+        log.error("[handleNotificationNotFoundException] ex : " + e.getMessage());
+        return ApiResponse.createFail(e.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = {NoAuthorizationException.class})
     public ApiResponse<String> handleNoAuthorizationException(NoAuthorizationException e) {
