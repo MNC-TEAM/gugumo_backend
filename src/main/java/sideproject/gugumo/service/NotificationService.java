@@ -141,7 +141,7 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
-    public <T extends NotificationDto> T convertToDto(Notification notification) {
+    private <T extends NotificationDto> T convertToDto(Notification notification) {
 
         if (notification.getNotificationType() == NotificationType.POST) {
             return (T) PostNotificationDto.builder()
@@ -161,6 +161,7 @@ public class NotificationService {
 
     }
 
+    @Transactional
     public void read(CustomUserDetails principal, Long id) {
         Member member = checkMemberValid(principal, "알림 읽음처리 실패: 비로그인 사용자입니다.",
                 "알림 읽음처리 실패: 권한이 없습니다.");
@@ -177,18 +178,20 @@ public class NotificationService {
 
     }
 
+    @Transactional
     public void readAll(CustomUserDetails principal) {
         Member member = checkMemberValid(principal, "알림 모두 읽음처리 실패: 비로그인 사용자입니다.",
                 "알림 모두 읽음처리 실패: 권한이 없습니다.");
 
-        List<Notification> noti = notificationRepository.findByMember(member);
+        List<Notification> notifications = notificationRepository.findByMember(member);
 
-        for (Notification notification : noti) {
+        for (Notification notification : notifications) {
             notification.read();
         }
 
     }
 
+    @Transactional
     public void deleteNotification(CustomUserDetails principal, Long id) {
         Member member = checkMemberValid(principal, "알림 삭제 실패: 비로그인 사용자입니다.",
                 "알림 삭제 실패: 권한이 없습니다.");
