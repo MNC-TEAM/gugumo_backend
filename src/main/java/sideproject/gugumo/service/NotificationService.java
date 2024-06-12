@@ -161,8 +161,23 @@ public class NotificationService {
 
     }
 
+    public void read(CustomUserDetails principal, Long id) {
+        Member member = checkMemberValid(principal, "알림 읽음처리 실패: 비로그인 사용자입니다.",
+                "알림 읽음처리 실패: 권한이 없습니다.");
 
-    public void deleteNotification(@AuthenticationPrincipal CustomUserDetails principal, Long id) {
+        Notification notification = notificationRepository.findById(id).orElseThrow(
+                () -> new NotificationNotFoundException("알림 읽음처리 실패: 존재하지 않는 알림입니다.")
+        );
+
+        if (!notification.getMember().equals(member)) {
+            throw new NoAuthorizationException("알림 읽음처리 실패: 권한이 없습니다.");
+        }
+
+        notification.read();
+
+    }
+
+    public void deleteNotification(CustomUserDetails principal, Long id) {
         Member member = checkMemberValid(principal, "알림 삭제 실패: 비로그인 사용자입니다.",
                 "알림 삭제 실패: 권한이 없습니다.");
 

@@ -44,4 +44,8 @@ public class Notification {
     private Long postId;
     private String senderNick;
 
+
+    public void read() {
+        this.isRead = true;
+    }
 }

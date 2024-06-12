@@ -33,6 +33,14 @@ public class NotificationController {
         return ApiResponse.createSuccess(notificationService.findNotification(principal));
     }
 
+    @PatchMapping("/notification/{noti_id}")
+    public ApiResponse<String> read(@AuthenticationPrincipal CustomUserDetails principal,
+                                    @PathVariable("noti_id") Long id) {
+
+        notificationService.read(principal, id);
+        return ApiResponse.createSuccess("알림 읽음처리 완료");
+    }
+
     @DeleteMapping("/notification/{noti_id}")
     public ApiResponse<String> deleteNoti(@AuthenticationPrincipal CustomUserDetails principal,
                                           @PathVariable("noti_id") Long id) {
