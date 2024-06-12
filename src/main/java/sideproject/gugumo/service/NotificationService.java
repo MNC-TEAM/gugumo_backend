@@ -2,6 +2,7 @@ package sideproject.gugumo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,6 @@ public class NotificationService {
 
         // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
         if (hasLostData(lastEventId)) {
-            log.info("sendLostData={}", lastEventId);
             sendLostData(lastEventId, principal.getUsername(), emitterId, emitter);
         }
 
@@ -230,7 +230,8 @@ public class NotificationService {
                 .forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
     }
 
-    private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
+    @Async
+    public void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
         try {
             emitter.send(SseEmitter.event()
                     .id(eventId)

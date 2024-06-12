@@ -1,5 +1,6 @@
 package sideproject.gugumo.repository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -8,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Repository
+@Slf4j
 public class EmitterRepositoryImpl implements EmitterRepository {
 
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
@@ -21,11 +23,12 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 
     @Override
     public void saveEventCache(String eventCacheId, Object event) {
+        log.info("add eventcache={}", event);
         eventCache.put(eventCacheId, event);
+        log.info("cachesize={}", eventCache.size());
     }
 
 
-    //TODO: 이벤트 아이디를 만들때 이메일+시간? memberId+시간? 고민하기
     @Override
     public Map<String, SseEmitter> findAllEmitterStartWithByMemberId(String memberId) {
         return emitters.entrySet().stream()
@@ -35,6 +38,7 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 
     @Override
     public Map<String, Object> findAllEventCacheStartWithByMemberId(String memberId) {
+        log.info("cachesize={}", eventCache.size());
         return eventCache.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(memberId))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
