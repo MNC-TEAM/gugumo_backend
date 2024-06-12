@@ -20,7 +20,7 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     /**
-     * @title 로그인 한 유저 sse 연결
+     * 로그인 한 유저 sse 연결
      */
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
     public SseEmitter subscribe(@AuthenticationPrincipal CustomUserDetails principal,
@@ -39,6 +39,13 @@ public class NotificationController {
 
         notificationService.read(principal, id);
         return ApiResponse.createSuccess("알림 읽음처리 완료");
+    }
+
+    @PatchMapping("/notification")
+    public ApiResponse<String> readAll(@AuthenticationPrincipal CustomUserDetails principal) {
+
+        notificationService.readAll(principal);
+        return ApiResponse.createSuccess("알림 모두 읽음처리 완료");
     }
 
     @DeleteMapping("/notification/{noti_id}")
