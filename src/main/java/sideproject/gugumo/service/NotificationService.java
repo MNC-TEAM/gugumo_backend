@@ -133,7 +133,7 @@ public class NotificationService {
         Member member = checkMemberValid(principal, "알림 조회 실패: 비로그인 사용자입니다.",
                 "알림 조회 실패: 권한이 없습니다.");
 
-        List<Notification> result = notificationRepository.findByMember(member);
+        List<Notification> result = notificationRepository.findByMemberOrderByCreateDateDesc(member);
 
         return result.stream()
                 .map(n -> convertToDto(n))
@@ -183,7 +183,7 @@ public class NotificationService {
         Member member = checkMemberValid(principal, "알림 모두 읽음처리 실패: 비로그인 사용자입니다.",
                 "알림 모두 읽음처리 실패: 권한이 없습니다.");
 
-        List<Notification> notifications = notificationRepository.findByMember(member);
+        List<Notification> notifications = notificationRepository.findByMemberOrderByCreateDateDesc(member);
 
         for (Notification notification : notifications) {
             notification.read();

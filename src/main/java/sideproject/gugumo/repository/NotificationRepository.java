@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    List<Notification> findByMember(Member member);
+    List<Notification> findByMemberOrderByCreateDateDesc(Member member);
 }
