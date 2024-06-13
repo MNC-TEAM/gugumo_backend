@@ -63,7 +63,7 @@ public class NotificationService {
     }
 
 
-    @Transactional
+
     public void send(Member receiver, String content, String message) {
 
         Notification notification = Notification.builder()
@@ -94,14 +94,14 @@ public class NotificationService {
     }
 
     //게시글 관련 정보 전송
-    @Transactional
+
     public void send(Member receiver, String content, String message, Long postId, String senderNick) {
 
         Notification notification = Notification.builder()
                 .member(receiver)
                 .content(content)
                 .message(message)
-                .notificationType(NotificationType.POST)
+                .notificationType(NotificationType.COMMENT)
                 .postId(postId)
                 .senderNick(senderNick)
                 .build();
@@ -118,7 +118,7 @@ public class NotificationService {
                             .id(notification.getId())
                             .content(notification.getContent())
                             .message(notification.getMessage())
-                            .notificationType(NotificationType.POST)
+                            .notificationType(NotificationType.COMMENT)
                             .createDate(notification.getCreateDate())
                             .postId(notification.getPostId())
                             .senderNick(notification.getSenderNick())
@@ -143,12 +143,12 @@ public class NotificationService {
 
     private <T extends NotificationDto> T convertToDto(Notification notification) {
 
-        if (notification.getNotificationType() == NotificationType.POST) {
+        if (notification.getNotificationType() == NotificationType.COMMENT) {
             return (T) PostNotificationDto.builder()
                     .id(notification.getId())
                     .name(notification.getMember().getNickname())
                     .content(notification.getContent())
-                    .notificationType(NotificationType.POST)
+                    .notificationType(NotificationType.COMMENT)
                     .message(notification.getMessage())
                     .createDate(notification.getCreateDate())
                     .isRead(notification.isRead())
@@ -239,6 +239,7 @@ public class NotificationService {
                     .data(data)
             );
         } catch (IOException exception) {
+            exception.printStackTrace();        //상대의 통신이
             emitterRepository.deleteById(emitterId);
         }
     }
