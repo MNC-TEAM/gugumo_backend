@@ -46,8 +46,7 @@ public class BookmarkService {
             throw new NoAuthorizationException("북마크 등록 실패: 비로그인 사용자입니다.");
         }
 
-        Member member = memberRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new NoAuthorizationException("북마크 등록 실패: 권한이 없습니다."));
+        Member member = principal.getMember();
 
         if (member.getStatus() != MemberStatus.active) {
             throw new NoAuthorizationException("북마크 등록 실패: 권한이 없습니다.");
@@ -77,8 +76,7 @@ public class BookmarkService {
         }
 
 
-        Member member = memberRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new NoAuthorizationException("북마크 조회 실패: 권한이 없습니다."));
+        Member member = principal.getMember();
 
         if (member.getStatus() != MemberStatus.active) {
             throw new NoAuthorizationException("북마크 조회 실패: 권한이 없습니다.");
@@ -144,8 +142,7 @@ public class BookmarkService {
             throw new NoAuthorizationException("북마크 삭제 실패: 비로그인 사용자입니다.");
         }
 
-        Member member = memberRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new NoAuthorizationException("북마크 삭제 실패: 권한이 없습니다."));
+        Member member = principal.getMember();
 
         if (member.getStatus() != MemberStatus.active) {
             throw new NoAuthorizationException("북마크 삭제 실패: 권한이 없습니다.");
