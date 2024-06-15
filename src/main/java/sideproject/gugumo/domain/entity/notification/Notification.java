@@ -36,7 +36,7 @@ public class Notification {
     @Builder.Default
     private LocalDateTime createDate = LocalDateTime.now();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;      //알림 수신자
 
