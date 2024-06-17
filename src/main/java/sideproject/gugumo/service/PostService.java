@@ -65,20 +65,7 @@ public class PostService {
          *  orElse~를 사용하는 경우 null이 아닐 시 Optional의 인자가 반환된다.
          */
 
-        //if principal==null->로그인을 하지 않아 principal 이 없음->권한이 없습니다 exception
-        if (principal == null) {
-            throw new NoAuthorizationException("저장 실패: 게시글 저장 권한이 없습니다.");
-        }
-
-        //토큰에서
-        Member author=memberRepository.findByUsername(principal.getUsername())
-                .orElseThrow(()->
-                        new NoAuthorizationException("저장 실패: 게시글 저장 권한이 없습니다.")
-                );
-
-        if (author.getStatus() != MemberStatus.active) {
-            throw new NoAuthorizationException("저장 실패: 게시글 저장 권한이 없습니다.");
-        }
+        Member author = checkMemberValid(principal, "저장 실패: 게시글 저장 권한이 없습니다.", "저장 실패: 게시글 저장 권한이 없습니다.");
 
 
         //post 저장
@@ -172,8 +159,8 @@ public class PostService {
     }
 
 
-    //장기, 단기에 따라 dto를 나눠서 전송
 
+    //장기, 단기에 따라 dto를 나눠서 전송
     @Transactional          //viewCount++가 동작하므로 readonly=false
     public <T extends DetailPostDto> T findDetailPostByPostId(CustomUserDetails principal, Long postId) {
 
@@ -253,21 +240,11 @@ public class PostService {
 
 
     }
+
     @Transactional
     public void update(CustomUserDetails principal, Long postId, UpdatePostReq updatePostReq) {
         //토큰에서
-        if (principal == null) {
-            throw new NoAuthorizationException("수정 실패: 비로그인 사용자입니다.");
-        }
-
-        Member member=memberRepository.findByUsername(principal.getUsername())
-                .orElseThrow(()->
-                        new NoAuthorizationException("수정 실패: 게시글 수정 권한이 없습니다.")
-                );
-
-        if (member.getStatus() != MemberStatus.active) {
-            throw new NoAuthorizationException("수정 실패: 게시글 수정 권한이 없습니다.");
-        }
+        Member member = checkMemberValid(principal, "수정 실패: 비로그인 사용자입니다.", "수정 실패: 게시글 수정 권한이 없습니다.");
 
         Post targetPost =postRepository.findByIdAndIsDeleteFalse(postId)
                 .orElseThrow(()->new PostNotFoundException("수정 실패: 해당 게시글이 존재하지 않습니다."));
@@ -284,23 +261,11 @@ public class PostService {
         targetMeeting.update(updatePostReq);
 
     }
-
     @Transactional
     public void deletePost(CustomUserDetails principal, Long postId) {
 
         //토큰에서
-        if (principal == null) {
-            throw new NoAuthorizationException("삭제 실패: 비로그인 사용자입니다.");
-        }
-
-        Member member=memberRepository.findByUsername(principal.getUsername())
-                .orElseThrow(()->
-                        new NoAuthorizationException("삭제 실패: 게시글 삭제 권한이 없습니다.")
-                );
-
-        if (member.getStatus() != MemberStatus.active) {
-            throw new NoAuthorizationException("삭제 실패: 게시글 삭제 권한이 없습니다.");
-        }
+        Member member = checkMemberValid(principal, "삭제 실패: 비로그인 사용자입니다.", "삭제 실패: 게시글 삭제 권한이 없습니다.");
 
         Post targetPost = postRepository.findByIdAndIsDeleteFalse(postId)
                 .orElseThrow(()->new PostNotFoundException("삭제 실패: 해당 게시글이 존재하지 않습니다."));
@@ -321,18 +286,7 @@ public class PostService {
     public <T extends SimplePostDto> PageCustom<T> findMyPost(CustomUserDetails principal, Pageable pageable, String q) {
 
         //토큰에서
-        if (principal == null) {
-            throw new NoAuthorizationException("내 글 조회 실패: 비로그인 사용자입니다.");
-        }
-
-        Member member=memberRepository.findByUsername(principal.getUsername())
-                .orElseThrow(()->
-                        new NoAuthorizationException("내 글 조회 실패: 접근 권한이 없습니다.")
-                );
-
-        if (member.getStatus() != MemberStatus.active) {
-            throw new NoAuthorizationException("내 글 조회 실패: 접근 권한이 없습니다.");
-        }
+        Member member = checkMemberValid(principal, "내 글 조회 실패: 비로그인 사용자입니다.", "내 글 조회 실패: 접근 권한이 없습니다.");
 
 
         Page<Post> page = postRepository.findByMemberAndTitleContainingAndIsDeleteFalse(pageable, member, q);
@@ -351,6 +305,7 @@ public class PostService {
 
         Member member;
 
+        //로그인을 하지 않은 경우에도 동작해야 함
         if (principal == null) {
             member = null;
         } else {
@@ -372,6 +327,23 @@ public class PostService {
                 .map(p -> convertToTransDto(p))
                 .map(r -> (T) r)
                 .collect(Collectors.toList());
+    }
+
+    private Member checkMemberValid(CustomUserDetails principal, String noLoginMessage, String notValidUserMessage) {
+        if (principal == null) {
+            throw new NoAuthorizationException(noLoginMessage);
+        }
+
+        //토큰에서
+        Member author=memberRepository.findByUsername(principal.getUsername())
+                .orElseThrow(()->
+                        new NoAuthorizationException(notValidUserMessage)
+                );
+
+        if (author.getStatus() != MemberStatus.active) {
+            throw new NoAuthorizationException(notValidUserMessage);
+        }
+        return author;
     }
 
     private <T extends SimplePostDto> T convertToTransDto(SimplePostQueryDto s) {
