@@ -56,8 +56,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         Member member =
                 principal == null ?
-                        null : principal.getMember();
-        
+                        null : memberRepository.findByUsername(principal.getUsername()).get();
+
         if (member != null && member.getStatus() != MemberStatus.active) {
             member = null;
         }

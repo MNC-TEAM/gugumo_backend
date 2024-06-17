@@ -71,7 +71,10 @@ public class PostService {
         }
 
         //토큰에서
-        Member author = principal.getMember();
+        Member author=memberRepository.findByUsername(principal.getUsername())
+                .orElseThrow(()->
+                        new NoAuthorizationException("저장 실패: 게시글 저장 권한이 없습니다.")
+                );
 
         if (author.getStatus() != MemberStatus.active) {
             throw new NoAuthorizationException("저장 실패: 게시글 저장 권한이 없습니다.");
@@ -182,7 +185,7 @@ public class PostService {
         Meeting targetMeeting = targetPost.getMeeting();
 
         Member member = principal == null ?
-                null : principal.getMember();
+                null : memberRepository.findByUsername(principal.getUsername()).get();
 
         if (member != null && member.getStatus() != MemberStatus.active) {
             member = null;
@@ -243,6 +246,7 @@ public class PostService {
 
             return (T) detailPostDto;
         } else {
+            //TODO: 해당 타입의 게시글이 없습니다Exception
             return null;
 
         }
@@ -256,7 +260,10 @@ public class PostService {
             throw new NoAuthorizationException("수정 실패: 비로그인 사용자입니다.");
         }
 
-        Member member = principal.getMember();
+        Member member=memberRepository.findByUsername(principal.getUsername())
+                .orElseThrow(()->
+                        new NoAuthorizationException("수정 실패: 게시글 수정 권한이 없습니다.")
+                );
 
         if (member.getStatus() != MemberStatus.active) {
             throw new NoAuthorizationException("수정 실패: 게시글 수정 권한이 없습니다.");
@@ -286,7 +293,10 @@ public class PostService {
             throw new NoAuthorizationException("삭제 실패: 비로그인 사용자입니다.");
         }
 
-        Member member = principal.getMember();
+        Member member=memberRepository.findByUsername(principal.getUsername())
+                .orElseThrow(()->
+                        new NoAuthorizationException("삭제 실패: 게시글 삭제 권한이 없습니다.")
+                );
 
         if (member.getStatus() != MemberStatus.active) {
             throw new NoAuthorizationException("삭제 실패: 게시글 삭제 권한이 없습니다.");
@@ -315,7 +325,10 @@ public class PostService {
             throw new NoAuthorizationException("내 글 조회 실패: 비로그인 사용자입니다.");
         }
 
-        Member member = principal.getMember();
+        Member member=memberRepository.findByUsername(principal.getUsername())
+                .orElseThrow(()->
+                        new NoAuthorizationException("내 글 조회 실패: 접근 권한이 없습니다.")
+                );
 
         if (member.getStatus() != MemberStatus.active) {
             throw new NoAuthorizationException("내 글 조회 실패: 접근 권한이 없습니다.");
@@ -341,7 +354,10 @@ public class PostService {
         if (principal == null) {
             member = null;
         } else {
-            member = principal.getMember();
+            member=memberRepository.findByUsername(principal.getUsername())
+                    .orElseThrow(()->
+                            new NoAuthorizationException("추천 글 조회 실패: 접근 권한이 없습니다.")
+                    );
 
             if (member.getStatus() != MemberStatus.active) {
                 member = null;
