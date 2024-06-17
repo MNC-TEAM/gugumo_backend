@@ -34,7 +34,7 @@ public class CmntRepositoryImpl implements CmntRepositoryCustom {
 
         Member user =
                 principal == null ?
-                        null : principal.getMember();
+                        null : memberRepository.findByUsername(principal.getUsername()).get();
 
         if (user != null && user.getStatus() != MemberStatus.active) {
             user = null;

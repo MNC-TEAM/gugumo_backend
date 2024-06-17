@@ -123,7 +123,8 @@ public class CmntService {
             throw new NoAuthorizationException(noLoginMessage);
         }
 
-        Member author = principal.getMember();
+        Member author = memberRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new NoAuthorizationException(notValidUserMessage));
 
         if (author.getStatus() != MemberStatus.active) {
             throw new NoAuthorizationException(notValidUserMessage);
