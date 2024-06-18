@@ -36,7 +36,8 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
 
-    @Transactional
+
+
     public SseEmitter subscribe(CustomUserDetails principal, String lastEventId) {
 
 
@@ -63,7 +64,7 @@ public class NotificationService {
     }
 
 
-
+    @Transactional
     public void send(Member receiver, String content, String message) {
 
         Notification notification = Notification.builder()
@@ -94,7 +95,7 @@ public class NotificationService {
     }
 
     //게시글 관련 정보 전송
-
+    @Transactional
     public void send(Member receiver, String content, String message, Long postId, String senderNick) {
 
         Notification notification = Notification.builder()
@@ -239,7 +240,6 @@ public class NotificationService {
                     .data(data)
             );
         } catch (IOException exception) {
-            exception.printStackTrace();        //상대의 통신이
             emitterRepository.deleteById(emitterId);
         }
     }
