@@ -50,7 +50,7 @@ public class PostController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "게시글 저장 권한 없음",
                                                                     content = @Content(schema = @Schema(implementation = ApiResponse.class),
                                                                      examples = @ExampleObject(
-                                                                             value = "{\"fail\" : \"success\", \"data\" : null, \"message\" : \"저장 실패: 게시글 저장 권한이 없습니다.\"}"
+                                                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"저장 실패: 게시글 저장 권한이 없습니다.\"}"
                                                                      )))
                 })
     public ApiResponse<String> save(@AuthenticationPrincipal CustomUserDetails principal,
