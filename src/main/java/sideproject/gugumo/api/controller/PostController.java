@@ -2,6 +2,7 @@ package sideproject.gugumo.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -39,7 +40,19 @@ public class PostController {
 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "글쓰기", description = "게시글을 작성합니다.")
+    @Operation(summary = "글쓰기", description = "게시글을 작성합니다.",
+                responses = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "글 작성 완료",
+                                                                    content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                                                     examples = @ExampleObject(
+                                                                             value = "{\"status\" : \"success\", \"data\" : \"글 작성 완료\", \"message\" : null}"
+                                                                     ))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "게시글 저장 권한 없음",
+                                                                    content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                                                     examples = @ExampleObject(
+                                                                             value = "{\"fail\" : \"success\", \"data\" : null, \"message\" : \"저장 실패: 게시글 저장 권한이 없습니다.\"}"
+                                                                     )))
+                })
     public ApiResponse<String> save(@AuthenticationPrincipal CustomUserDetails principal,
                                     @RequestBody @Valid CreatePostReq createPostReq) {
         postService.save(principal, createPostReq);
