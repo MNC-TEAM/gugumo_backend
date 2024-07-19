@@ -1,6 +1,7 @@
 package sideproject.gugumo.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,9 +14,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import sideproject.gugumo.cond.SortType;
 import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.dto.detailpostdto.DetailPostDto;
 import sideproject.gugumo.domain.dto.simplepostdto.SimplePostDto;
+import sideproject.gugumo.domain.dto.simplepostdto.SimplePostLongDto;
+import sideproject.gugumo.domain.dto.simplepostdto.SimplePostShortDto;
+import sideproject.gugumo.domain.entity.meeting.GameType;
+import sideproject.gugumo.domain.entity.meeting.Location;
 import sideproject.gugumo.page.PageCustom;
 import sideproject.gugumo.request.CreatePostReq;
 import sideproject.gugumo.request.UpdatePostReq;
@@ -43,7 +49,7 @@ public class PostController {
     @Operation(summary = "글쓰기", description = "게시글을 작성합니다.",
                 responses = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "글 작성 완료",
-                                                                    content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                                                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                                                      examples = @ExampleObject(
                                                                              value = "{\"status\" : \"success\", \"data\" : \"글 작성 완료\", \"message\" : null}"
                                                                      ))),
@@ -69,12 +75,12 @@ public class PostController {
     @Operation(summary = "게시글 조회", description = "주어진 조건에 맞는 게시글을 조회합니다.")
     public <T extends SimplePostDto> ApiResponse<PageCustom<T>> findPostSimple(
             @AuthenticationPrincipal CustomUserDetails principal,
-            @PageableDefault(size = 12) Pageable pageable,
-            @RequestParam(required = false, value = "q") String q,
-            @RequestParam(required = false, value = "location") String location,
-            @RequestParam(required = false, value = "gametype") String gameType,
-            @RequestParam(required = false, value = "meetingstatus", defaultValue = "RECRUIT") String meetingStatus,
-            @RequestParam(required = false, value = "sort", defaultValue = "NEW") String sortType) {
+            @PageableDefault(size = 12) @Parameter(hidden = true) Pageable pageable,
+            @RequestParam(required = false, value = "q") @Parameter(description = "검색어") String q,
+            @RequestParam(required = false, value = "location") @Parameter(description = "모임 지역", schema = @Schema(implementation = Location.class)) String location,
+            @RequestParam(required = false, value = "gametype") @Parameter(description = "종목", schema = @Schema(implementation = GameType.class)) String gameType,
+            @RequestParam(required = false, value = "meetingstatus", defaultValue = "RECRUIT") @Parameter(description = "종목", schema = @Schema(allowableValues = {"RECRUIT, END, ALL"})) String meetingStatus,
+            @RequestParam(required = false, value = "sort", defaultValue = "NEW") @Parameter(description = "정렬 조건", schema = @Schema(implementation = SortType.class)) String sortType) {
 
 
         return ApiResponse.createSuccess(postService.findSimplePost(principal, pageable, q, gameType, location, meetingStatus, sortType));
