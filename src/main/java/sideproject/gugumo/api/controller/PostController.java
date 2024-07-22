@@ -72,7 +72,83 @@ public class PostController {
      * 동적 정렬 기능이 필요하면 스프링 데이터 페이징이 제공하는 Sort를 사용하기 보다는 파라미터를 받아서 직접 처리하는 것을 권장한다.
      */
     @GetMapping
-    @Operation(summary = "게시글 조회", description = "주어진 조건에 맞는 게시글을 조회합니다.")
+    @Operation(summary = "게시글 조회", description = "주어진 조건에 맞는 게시글을 조회합니다.",
+                responses = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "게시글 정보",
+                                                                    content=@Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                                                    examples = @ExampleObject(value = """
+                                                                            {
+                                                                                "status": "success",
+                                                                                   "data": {
+                                                                                    "content": [
+                                                                                        {
+                                                                                            "postId": 4,
+                                                                                            "meetingStatus": "RECRUIT",
+                                                                                            "gameType": "BASKETBALL",
+                                                                                            "location": "SEOUL",
+                                                                                            "title": "test1",
+                                                                                            "meetingMemberNum": 3,
+                                                                                            "meetingDeadline": "2024-12-11",
+                                                                                            "meetingDateTime": "2024-12-21T15:00:00",
+                                                                                            "bookmarked": false
+                                                                                        },
+                                                                                        {
+                                                                                            "postId": 3,
+                                                                                            "meetingStatus": "RECRUIT",
+                                                                                            "gameType": "BASKETBALL",
+                                                                                            "location": "SEOUL",
+                                                                                            "title": "test1",
+                                                                                            "meetingMemberNum": 3,
+                                                                                            "meetingDeadline": "2024-12-11",
+                                                                                            "meetingDateTime": "2024-12-21T15:00:00",
+                                                                                            "bookmarked": false
+                                                                                        },
+                                                                                        {
+                                                                                            "postId": 2,
+                                                                                            "meetingStatus": "RECRUIT",
+                                                                                            "gameType": "BASKETBALL",
+                                                                                            "location": "SEOUL",
+                                                                                            "title": "test1",
+                                                                                            "meetingMemberNum": 3,
+                                                                                            "meetingDeadline": "2024-12-11",
+                                                                                            "meetingTime": "15:00:00",
+                                                                                            "meetingDays": "MON;WED;FRI",
+                                                                                            "bookmarked": false
+                                                                                        },
+                                                                                        {
+                                                                                            "postId": 1,
+                                                                                            "meetingStatus": "RECRUIT",
+                                                                                            "gameType": "BASKETBALL",
+                                                                                            "location": "SEOUL",
+                                                                                            "title": "test1",
+                                                                                            "meetingMemberNum": 3,
+                                                                                            "meetingDeadline": "2024-12-11",
+                                                                                            "meetingTime": "15:00:00",
+                                                                                            "meetingDays": "MON;WED;FRI",
+                                                                                            "bookmarked": false
+                                                                                        }
+                                                                                    ],
+                                                                                    "pageableCustom": {
+                                                                                        "number": 1,
+                                                                                        "size": 12,
+                                                                                        "sort": {
+                                                                                            "empty": true,
+                                                                                            "sorted": false,
+                                                                                            "unsorted": true
+                                                                                        },
+                                                                                        "first": true,
+                                                                                        "last": true,
+                                                                                        "hasNext": false,
+                                                                                        "totalPages": 1,
+                                                                                        "totalElements": 4,
+                                                                                        "numberOfElements": 4,
+                                                                                        "empty": false
+                                                                                    }
+                                                                                },
+                                                                                "message": null
+                                                                            }
+                                                                            """)))
+                })
     public <T extends SimplePostDto> ApiResponse<PageCustom<T>> findPostSimple(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PageableDefault(size = 12) @Parameter(hidden = true) Pageable pageable,
