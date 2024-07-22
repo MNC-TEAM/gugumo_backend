@@ -1,5 +1,6 @@
 package sideproject.gugumo.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +14,11 @@ public class ApiResponse<T> {
     private static final String FAIL_STATUS = "fail";
     private static final String ERROR_STATUS = "error";
 
+    @Schema(description = "성공 실패 여부", allowableValues = {"success, fail"})
     private String status;
+    @Schema(description = "응답 데이터", implementation = Object.class)
     private T data;
+    @Schema(description = "응답 및 에러 메시지")
     private String message;
 
     @Builder
