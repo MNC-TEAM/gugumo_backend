@@ -30,11 +30,19 @@ public class SwaggerConfig {
 
         List<Server> servers = new ArrayList<>();
 
-        Server server = new Server()
+
+
+        Server testServer = new Server()
+                .description("Test Server")
+                .url("http://localhost:8080");
+
+        servers.add(testServer);
+
+        Server operateServer = new Server()
                 .description("API Server")
                 .url("http://16.171.34.138:8080");
 
-        servers.add(server);
+        servers.add(operateServer);
 
         return new OpenAPI()
                 .components(new Components())
