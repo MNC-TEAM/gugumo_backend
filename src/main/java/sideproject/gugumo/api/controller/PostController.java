@@ -163,7 +163,39 @@ public class PostController {
     }
 
     @GetMapping("/{post_id}")
-    @Operation(summary = "게시글 상세 조회", description = "게시글의 상세 정보를 조회합니다.")
+    @Operation(summary = "게시글 상세 조회", description = "게시글의 상세 정보를 조회합니다.",
+            responses = {
+                @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "글 상세 내용",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                examples = @ExampleObject(
+                                        value = """
+                                                {
+                                                    "status": "success",
+                                                    "data": {
+                                                        "postId": 2,
+                                                        "author": "testnick",
+                                                        "meetingType": "SHORT",
+                                                        "gameType": "BADMINTON",
+                                                        "meetingMemberNum": 1,
+                                                        "meetingDeadline": "2024-05-06",
+                                                        "openKakao": "open",
+                                                        "location": "GYEONGGI",
+                                                        "title": "테스트 asdf제목입니다.",
+                                                        "content": "테스트 내용입니다.",
+                                                        "createdDateTime": "2024-05-21T20:09:47.373269",
+                                                        "meetingStatus": "RECRUIT",
+                                                        "viewCount": 1,
+                                                        "bookmarkCount": 0,
+                                                        "meetingDateTime": "2024-05-06T15:00:00",
+                                                        "bookmarked": false,
+                                                        "authorExpired": false,
+                                                        "yours": true
+                                                    },
+                                                    "message": null
+                                                }
+                                                """
+                                )))
+            })
     public <T extends DetailPostDto> ApiResponse<T> findPostDetail(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable("post_id") Long postId) {
