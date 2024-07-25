@@ -273,7 +273,74 @@ public class PostController {
 
 
     @GetMapping("/my")
-    @Operation(summary = "내 게시글 조회", description = "내가 작성한 게시글을 조회합니다.")
+    @Operation(summary = "유저 게시글 조회", description = "내가 작성한 게시글을 조회합니다.",
+            responses = {
+                @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 게시글 리스트",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                            examples = @ExampleObject(
+                                    value = """
+                                            {
+                                                "status": "success",
+                                                "data": {
+                                                    "content": [
+                                                        {
+                                                            "postId": 2,
+                                                            "meetingStatus": "RECRUIT",
+                                                            "gameType": "BASKETBALL",
+                                                            "location": "SEOUL",
+                                                            "title": "test21",
+                                                            "meetingMemberNum": 3,
+                                                            "meetingDeadline": "2024-12-11",
+                                                            "meetingTime": "15:00:00",
+                                                            "meetingDays": "MON;WED;FRI",
+                                                            "bookmarked": false
+                                                        },
+                                                        {
+                                                            "postId": 1,
+                                                            "meetingStatus": "RECRUIT",
+                                                            "gameType": "BASKETBALL",
+                                                            "location": "SEOUL",
+                                                            "title": "test21",
+                                                            "meetingMemberNum": 3,
+                                                            "meetingDeadline": "2024-12-11",
+                                                            "meetingTime": "15:00:00",
+                                                            "meetingDays": "MON;WED;FRI",
+                                                            "bookmarked": false
+                                                        }
+                                                    ],
+                                                    "pageable": {
+                                                        "number": 1,
+                                                        "size": 12,
+                                                        "sort": {
+                                                            "empty": false,
+                                                            "sorted": true,
+                                                            "unsorted": false
+                                                        },
+                                                        "first": true,
+                                                        "last": true,
+                                                        "hasNext": false,
+                                                        "totalPages": 1,
+                                                        "totalElements": 2,
+                                                        "numberOfElements": 2,
+                                                        "empty": false
+                                                    }
+                                                },
+                                                "message": null
+                                            }
+                                            """
+                            ))),
+                @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                        content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                examples = @ExampleObject(
+                                        value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"내 글 조회 실패: 비로그인 사용자입니다.\"}"
+                                ))),
+                @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "내 글 조회 권한 없음",
+                        content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                examples = @ExampleObject(
+                                        value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"내 글 조회 실패: 게시글 삭제 권한이 없습니다.\"}"
+                                )))
+
+            })
     public <T extends SimplePostDto> ApiResponse<PageCustom<T>> findMyPost(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PageableDefault(size = 12, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable,
