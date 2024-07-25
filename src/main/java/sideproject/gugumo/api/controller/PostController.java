@@ -337,7 +337,7 @@ public class PostController {
                 @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "내 글 조회 권한 없음",
                         content = @Content(schema = @Schema(implementation = ApiResponse.class),
                                 examples = @ExampleObject(
-                                        value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"내 글 조회 실패: 게시글 삭제 권한이 없습니다.\"}"
+                                        value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"내 글 조회 실패: 접근 권한이 없습니다.\"}"
                                 )))
 
             })
@@ -350,7 +350,68 @@ public class PostController {
     }
 
     @GetMapping("/recommend")
-    @Operation(summary = "추천 게시글 조회", description = "선호 종목에 맞춘 추천 게시글을 조회합니다.")
+    @Operation(summary = "추천 게시글 조회", description = "선호 종목에 맞춘 추천 게시글을 조회합니다.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 게시글 리스트",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = """
+                                                    {
+                                                         "status": "success",
+                                                         "data": {
+                                                             "content": [
+                                                                 {
+                                                                     "postId": 2,
+                                                                     "meetingStatus": "RECRUIT",
+                                                                     "gameType": "BASKETBALL",
+                                                                     "location": "SEOUL",
+                                                                     "title": "test21",
+                                                                     "meetingMemberNum": 3,
+                                                                     "meetingDeadline": "2024-12-11",
+                                                                     "meetingTime": "15:00:00",
+                                                                     "meetingDays": "MON;WED;FRI",
+                                                                     "bookmarked": false
+                                                                 },
+                                                                 {
+                                                                     "postId": 1,
+                                                                     "meetingStatus": "RECRUIT",
+                                                                     "gameType": "BASKETBALL",
+                                                                     "location": "SEOUL",
+                                                                     "title": "test21",
+                                                                     "meetingMemberNum": 3,
+                                                                     "meetingDeadline": "2024-12-11",
+                                                                     "meetingTime": "15:00:00",
+                                                                     "meetingDays": "MON;WED;FRI",
+                                                                     "bookmarked": false
+                                                                 }
+                                                             ],
+                                                             "pageable": {
+                                                                 "number": 1,
+                                                                 "size": 12,
+                                                                 "sort": {
+                                                                     "empty": false,
+                                                                     "sorted": true,
+                                                                     "unsorted": false
+                                                                 },
+                                                                 "first": true,
+                                                                 "last": true,
+                                                                 "hasNext": false,
+                                                                 "totalPages": 1,
+                                                                 "totalElements": 2,
+                                                                 "numberOfElements": 2,
+                                                                 "empty": false
+                                                             }
+                                                         },
+                                                         "message": null
+                                                     }
+                                                    """
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "추천글 조회 권한 없음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"추천글 조회 실패: 권한이 없습니다.\"}"
+                                    )))
+            })
     public <T extends SimplePostDto> ApiResponse<List<T>> findRecommendPost(
             @AuthenticationPrincipal CustomUserDetails principal) {
         return ApiResponse.createSuccess(postService.findRecommendPost(principal));
