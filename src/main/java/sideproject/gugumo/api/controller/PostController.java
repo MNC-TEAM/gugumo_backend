@@ -239,7 +239,29 @@ public class PostController {
 
 
     @DeleteMapping("/{post_id}")
-    @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다.")
+    @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "글 삭제 완료",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"success\", \"data\" : \"글 삭제 완료\", \"message\" : null}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"삭제 실패: 비로그인 사용자입니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "게시글 삭제 권한 없음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"삭제 실패: 게시글 삭제 권한이 없습니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "게시글이 존재하지 않음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"삭제 실패: 해당 게시글이 존재하지 않습니다.\"}"
+                                    )))
+            })
     public ApiResponse<String> deletePost(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable("post_id") Long postId) {
