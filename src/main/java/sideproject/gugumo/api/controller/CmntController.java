@@ -1,6 +1,7 @@
 package sideproject.gugumo.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,7 +35,7 @@ public class CmntController {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "댓글 등록 완료",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
-                                            value = "{\"status\" : \"success\", \"data\" : \"글 삭제 완료\", \"message\" : null}"
+                                            value = "{\"status\" : \"success\", \"data\" : \"댓글 저장 완료\", \"message\" : null}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
                             content = @Content(schema = @Schema(implementation = ApiResponse.class),
@@ -61,8 +62,73 @@ public class CmntController {
     }
 
     @GetMapping("/{post_id}")
+    @Operation(summary = "댓글 조회", description = "해당 게시글에 해당하는 댓글을 조회합니다.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "댓글 정보",
+                            content=@Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(value = """
+                                            {
+                                                  "status": "success",
+                                                  "data": [
+                                                      {
+                                                          "commentId": 1,
+                                                          "author": "testnick",
+                                                          "content": "testComment",
+                                                          "createdDateTime": "2024-05-28T00:09:34.950391",
+                                                          "orderNum": 0,
+                                                          "authorExpired": false,
+                                                          "yours": true,
+                                                          "notRoot": false
+                                                      },
+                                                      {
+                                                          "commentId": 4,
+                                                          "author": "testnick",
+                                                          "content": "testComment",
+                                                          "createdDateTime": "2024-05-28T00:09:40.926817",
+                                                          "parentCommentId": 1,
+                                                          "orderNum": 0,
+                                                          "authorExpired": false,
+                                                          "yours": true,
+                                                          "notRoot": true
+                                                      },
+                                                      {
+                                                          "commentId": 5,
+                                                          "author": "testnick",
+                                                          "content": "testComment",
+                                                          "createdDateTime": "2024-05-28T00:09:41.550963",
+                                                          "parentCommentId": 1,
+                                                          "orderNum": 0,
+                                                          "authorExpired": false,
+                                                          "yours": true,
+                                                          "notRoot": true
+                                                      },
+                                                      {
+                                                          "commentId": 2,
+                                                          "author": "testnick",
+                                                          "content": "testComment",
+                                                          "createdDateTime": "2024-05-28T00:09:35.611539",
+                                                          "orderNum": 1,
+                                                          "authorExpired": false,
+                                                          "yours": true,
+                                                          "notRoot": false
+                                                      },
+                                                      {
+                                                          "commentId": 3,
+                                                          "author": "testnick",
+                                                          "content": "testComment",
+                                                          "createdDateTime": "2024-05-28T00:09:36.392713",
+                                                          "orderNum": 2,
+                                                          "authorExpired": false,
+                                                          "yours": true,
+                                                          "notRoot": false
+                                                      }
+                                                  ],
+                                                  "message": null
+                                              }
+                                                                            """)))
+            })
     public ApiResponse<List<CmntDto>> findComment(@AuthenticationPrincipal CustomUserDetails principal,
-                                                  @PathVariable("post_id") Long postId) {
+                                                  @PathVariable("post_id") @Parameter(description = "게시글 고유번호") Long postId) {
 
         return ApiResponse.createSuccess(cmntService.findComment(postId, principal));
     }
