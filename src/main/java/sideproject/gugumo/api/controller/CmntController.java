@@ -134,8 +134,32 @@ public class CmntController {
     }
 
     @PatchMapping("/{comment_id}")
+    @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "댓글 갱신 완료",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"success\", \"data\" : \"댓글글 갱신 완료\", \"message\" : null}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 갱신 실패: 비로그인 사용자입니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "댓글 수정 권한 없음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 갱신 실패: 권한이 없습니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "게시글이 존재하지 않음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 갱신 실패: 해당 댓글이 존재하지 않습니다.\"}"
+                                    )))
+
+            })
     public ApiResponse<String> updateComment(@AuthenticationPrincipal CustomUserDetails principal,
-                                             @PathVariable("comment_id") Long commentId,
+                                             @PathVariable("comment_id") @Parameter(description = "댓글 고유 번호") Long commentId,
                                              @RequestBody UpdateCmntReq req) {
 
         cmntService.updateComment(commentId, req, principal);

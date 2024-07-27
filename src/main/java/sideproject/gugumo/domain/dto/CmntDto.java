@@ -19,7 +19,7 @@ public class CmntDto {
     private boolean isYours;
     @Schema(description = "댓글 작성자 탈퇴 여부")
     private boolean isAuthorExpired;
-    @Schema(description = "댓글 내용")
+    @Schema(description = "댓글 내용", maxLength = 1000)
     private String content;
     @Schema(description = "댓글 작성 시각")
     private LocalDateTime createdDateTime;
