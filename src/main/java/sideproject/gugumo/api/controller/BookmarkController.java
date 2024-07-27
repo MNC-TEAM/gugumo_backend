@@ -2,6 +2,7 @@ package sideproject.gugumo.api.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -68,10 +69,55 @@ public class BookmarkController {
     }
 
     @GetMapping
+    @Operation(summary = "북마크 조회", description = "북마크한 게시글을 조회합니다.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "북마크 게시글",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = """
+                                                    {
+                                                        "status": "success",
+                                                        "data": {
+                                                             "content": [
+                                                                 {
+                                                                     "postId": 1,
+                                                                     "status": "RECRUIT",
+                                                                     "gameType": "BASKETBALL",
+                                                                     "location": "SEOUL",
+                                                                     "title": "test1",
+                                                                     "meetingDateTime": "1970-01-01T15:00:00",
+                                                                     "meetingDays": "MON;WED;FRI",
+                                                                     "meetingMemberNum": 3,
+                                                                     "meetingDeadline": "2024-12-11"
+                                                                 }
+                                                             ],
+                                                             "pageableCustom": {
+                                                                 "number": 1,
+                                                                 "size": 12,
+                                                                 "sort": {
+                                                                     "empty": true,
+                                                                     "sorted": false,
+                                                                     "unsorted": true
+                                                                 },
+                                                                 "first": true,
+                                                                 "last": true,
+                                                                 "hasNext": false,
+                                                                 "totalPages": 1,
+                                                                 "totalElements": 1,
+                                                                 "numberOfElements": 1,
+                                                                 "empty": false
+                                                             }
+                                                             
+                                                        },
+                                                        "message": null
+                                                    }
+                                                    """
+                                    )))
+            })
     public <T extends SimplePostDto> ApiResponse<PageCustom<T>> findBookmark(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PageableDefault(size = 12, sort="id", direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestParam(required = false, value = "q", defaultValue = "") String q) {
+            @RequestParam(required = false, value = "q", defaultValue = "") @Parameter(description = "검색어") String q) {
 
         return ApiResponse.createSuccess(bookmarkService.findBookmarkByMember(principal, pageable, q));
     }
