@@ -198,7 +198,7 @@ public class PostController {
             })
     public <T extends DetailPostDto> ApiResponse<T> findPostDetail(
             @AuthenticationPrincipal CustomUserDetails principal,
-            @PathVariable("post_id") Long postId) {
+            @PathVariable("post_id") @Parameter(description = "조회할 게시글 고유번호") Long postId) {
         DetailPostDto detailPostDto = postService.findDetailPostByPostId(principal, postId);
 
         return ApiResponse.createSuccess((T) detailPostDto);
@@ -230,7 +230,7 @@ public class PostController {
 
     })
     public ApiResponse<String> updatePost(@AuthenticationPrincipal CustomUserDetails principal,
-                                          @PathVariable("post_id") Long postId,
+                                          @PathVariable("post_id") @Parameter(description = "수정할 게시글 고유번호") Long postId,
                                           @RequestBody @Valid UpdatePostReq updatePostReq) {
         postService.update(principal, postId, updatePostReq);
 

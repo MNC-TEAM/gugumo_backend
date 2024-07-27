@@ -123,9 +123,37 @@ public class BookmarkController {
     }
 
     @DeleteMapping("/{bookmark_id}")
+    @Operation(summary = "북마크 삭제", description = "북마크를 삭제합니다.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "북마크 삭제 완료",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"success\", \"data\" : \"북마크 삭제 완료\", \"message\" : null}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 삭제 실패: 비로그인 사용자입니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "북마크 삭제 권한 없음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 삭제 실패: 권한이 없습니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "북마크가 존재하지 않음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 삭제 실패: 해당 북마크가 존재하지 않습니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "게시글이 존재하지 않음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 삭제 실패: 해당 게시글이 존재하지 않습니다.\"}"
+                                    )))
+            })
     public ApiResponse<String> deleteBookmark(
             @AuthenticationPrincipal CustomUserDetails principal,
-            @PathVariable("bookmark_id") Long bookmarkId) {
+            @PathVariable("bookmark_id") @Parameter(description = "삭제할 북마크 고유번호") Long bookmarkId) {
         bookmarkService.delete(bookmarkId, principal);
 
         return ApiResponse.createSuccess("북마크 삭제 완료");
