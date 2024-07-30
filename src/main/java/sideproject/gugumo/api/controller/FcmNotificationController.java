@@ -105,12 +105,29 @@ public class FcmNotificationController {
             })
     public ApiResponse<String> read(@AuthenticationPrincipal CustomUserDetails principal,
                                     @PathVariable("noti_id") Long id) {
-
         fcmNotificationService.read(principal, id);
         return ApiResponse.createSuccess("알림 읽음처리 완료");
     }
 
     @PatchMapping("/notification/read")
+    @Operation(summary = "일림 모두 읽음처리", description = "해당 유저의 모든 알림을 읽음처리 합니다.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "토큰 저장 완료",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"success\", \"data\" : \"알림 모두 읽음처리 완료\", \"message\" : null}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 모두 읽음처리 실패: 비로그인 사용자입니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 모두 읽음처리 실패: 권한이 없습니다.\"}"
+                                    )))
+            })
     public ApiResponse<String> readAll(@AuthenticationPrincipal CustomUserDetails principal) {
 
         fcmNotificationService.readAll(principal);
