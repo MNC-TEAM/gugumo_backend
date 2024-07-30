@@ -80,9 +80,9 @@ public class FcmNotificationController {
 
 
     @PatchMapping("/notification/read/{noti_id}")
-    @Operation(summary = "일림 읽음처리", description = "알림 하나를 읽음처리 합니다.",
+    @Operation(summary = "알림 읽음처리", description = "알림 하나를 읽음처리 합니다.",
             responses = {
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "토큰 저장 완료",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "알림 읽음처리",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"success\", \"data\" : \"알림 읽음처리 완료\", \"message\" : null}"
@@ -110,9 +110,9 @@ public class FcmNotificationController {
     }
 
     @PatchMapping("/notification/read")
-    @Operation(summary = "일림 모두 읽음처리", description = "해당 유저의 모든 알림을 읽음처리 합니다.",
+    @Operation(summary = "알림 모두 읽음처리", description = "해당 유저의 모든 알림을 읽음처리 합니다.",
             responses = {
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "토큰 저장 완료",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "알림 모두 읽음처리",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"success\", \"data\" : \"알림 모두 읽음처리 완료\", \"message\" : null}"
@@ -135,6 +135,29 @@ public class FcmNotificationController {
     }
 
     @DeleteMapping("/notification/{noti_id}")
+    @Operation(summary = "알림 삭제", description = "알림 하나를 삭제합니다.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "알림 삭제",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"success\", \"data\" : \"알림 삭제 완료\", \"message\" : null}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 삭제 실패: 비로그인 사용자입니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 삭제 실패: 권한이 없습니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 알림",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 삭제 실패: 존재하지 않는 알림입니다.\"}"
+                                    )))
+            })
     public ApiResponse<String> deleteNoti(@AuthenticationPrincipal CustomUserDetails principal,
                                           @PathVariable("noti_id") Long id) {
         fcmNotificationService.deleteNotification(principal, id);
