@@ -1,6 +1,10 @@
 package sideproject.gugumo.api.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,54 @@ public class FcmNotificationController {
 
     //몇개?
     @GetMapping("/notification")
+    @Operation(summary = "알림 조회", description = "알림을 조회합니다.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "알림 정보",
+                            content=@Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(value = """
+                                            {
+                                                   "status": "success",
+                                                   "data": [
+                                                       {
+                                                           "id": 652,
+                                                           "content": "testComment",
+                                                           "notificationType": "COMMENT",
+                                                           "createDate": "2024-06-13T19:30:35.40451",
+                                                           "postId": 1,
+                                                           "read": false
+                                                       },
+                                                       {
+                                                           "id": 605,
+                                                           "content": "testComment",
+                                                           "notificationType": "COMMENT",
+                                                           "createDate": "2024-06-13T03:27:17.082465",
+                                                           "postId": 1,
+                                                           "read": false
+                                                       },
+                                                       {
+                                                           "id": 604,
+                                                           "content": "testComment",
+                                                           "notificationType": "COMMENT",
+                                                           "createDate": "2024-06-13T03:27:13.773505",
+                                                           "postId": 1,
+                                                           "read": false
+                                                       },
+                                                       ...
+                                                      ],
+                                                 "message": null
+                                                 }
+                                                                            """))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 조회 실패: 비로그인 사용자입니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 조회 실패: 권한이 없습니다.\"}"
+                                    )))
+            })
     public <T extends CustomNotiDto> ApiResponse<List<T>> findNoti(@AuthenticationPrincipal CustomUserDetails principal) {
         return ApiResponse.createSuccess(fcmNotificationService.findNotification(principal));
     }
