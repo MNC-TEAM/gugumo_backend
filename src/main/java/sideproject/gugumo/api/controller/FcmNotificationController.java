@@ -167,6 +167,24 @@ public class FcmNotificationController {
 
 
     @DeleteMapping("/notification/read")
+    @Operation(summary = "읽은 알림 삭제", description = "해당 유저의 모든 읽은 알림을 삭제합니다.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "읽은 알림 삭제",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"success\", \"data\" : \"읽은 알림 삭제 완료\", \"message\" : null}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"읽은 알림 삭제 실패: 비로그인 사용자입니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"읽은 알림 삭제 실패: 권한이 없습니다.\"}"
+                                    )))
+            })
     public ApiResponse<String> deleteReadNoti(@AuthenticationPrincipal CustomUserDetails principal) {
         fcmNotificationService.deleteReadNotification(principal);
 
