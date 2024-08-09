@@ -24,6 +24,7 @@ public class SwaggerConfig {
         Components components = new Components().addSecuritySchemes(jwt, new SecurityScheme()
                 .name(jwt)
                 .type(SecurityScheme.Type.HTTP)
+                .in(SecurityScheme.In.HEADER)
                 .scheme("Bearer")
                 .bearerFormat("JWT")
         );
