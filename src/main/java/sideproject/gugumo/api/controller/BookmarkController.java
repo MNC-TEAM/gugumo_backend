@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import sideproject.gugumo.service.BookmarkService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/bookmark")
+@Tag(name = "Bookmark")
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
