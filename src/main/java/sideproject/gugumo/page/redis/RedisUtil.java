@@ -1,4 +1,4 @@
-package sideproject.gugumo.redis;
+package sideproject.gugumo.page.redis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

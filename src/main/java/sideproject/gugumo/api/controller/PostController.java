@@ -18,8 +18,6 @@ import sideproject.gugumo.cond.SortType;
 import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.dto.detailpostdto.DetailPostDto;
 import sideproject.gugumo.domain.dto.simplepostdto.SimplePostDto;
-import sideproject.gugumo.domain.dto.simplepostdto.SimplePostLongDto;
-import sideproject.gugumo.domain.dto.simplepostdto.SimplePostShortDto;
 import sideproject.gugumo.domain.entity.meeting.GameType;
 import sideproject.gugumo.domain.entity.meeting.Location;
 import sideproject.gugumo.page.PageCustom;
@@ -27,6 +25,10 @@ import sideproject.gugumo.request.CreatePostReq;
 import sideproject.gugumo.request.UpdatePostReq;
 import sideproject.gugumo.response.ApiResponse;
 import sideproject.gugumo.service.PostService;
+import sideproject.gugumo.swagger.detailpostdtoresponse.LongDetailPostDtoResponse;
+import sideproject.gugumo.swagger.detailpostdtoresponse.ShortDetailPostDtoResponse;
+import sideproject.gugumo.swagger.simplepostdtoresponse.SimplePostLongDtoResponse;
+import sideproject.gugumo.swagger.simplepostdtoresponse.SimplePostShortDtoResponse;
 
 import java.util.List;
 
@@ -75,7 +77,7 @@ public class PostController {
     @Operation(summary = "게시글 조회", description = "주어진 조건에 맞는 게시글을 조회합니다.",
                 responses = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "게시글 정보",
-                                                                    content=@Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                                                                    content=@Content(mediaType = "application/json", schema = @Schema(oneOf = {SimplePostShortDtoResponse.class, SimplePostLongDtoResponse.class}),
                                                                     examples = @ExampleObject(value = """
                                                                             {
                                                                                 "status": "success",
@@ -166,7 +168,7 @@ public class PostController {
     @Operation(summary = "게시글 상세 조회", description = "게시글의 상세 정보를 조회합니다.",
             responses = {
                 @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "글 상세 내용",
-                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                        content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ShortDetailPostDtoResponse.class, LongDetailPostDtoResponse.class}),
                                 examples = @ExampleObject(
                                         value = """
                                                 {
@@ -287,7 +289,7 @@ public class PostController {
     @Operation(summary = "유저 게시글 조회", description = "내가 작성한 게시글을 조회합니다.",
             responses = {
                 @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 게시글 리스트",
-                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                        content=@Content(mediaType = "application/json", schema = @Schema(oneOf = {SimplePostShortDtoResponse.class, SimplePostLongDtoResponse.class}),
                             examples = @ExampleObject(
                                     value = """
                                             {
@@ -364,7 +366,7 @@ public class PostController {
     @Operation(summary = "추천 게시글 조회", description = "선호 종목에 맞춘 추천 게시글을 조회합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 게시글 리스트",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                            content=@Content(mediaType = "application/json", schema = @Schema(oneOf = {SimplePostShortDtoResponse.class, SimplePostLongDtoResponse.class}),
                                     examples = @ExampleObject(
                                             value = """
                                                     {

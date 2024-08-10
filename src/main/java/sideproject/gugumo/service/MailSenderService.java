@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import sideproject.gugumo.exception.exception.NoAuthorizationException;
-import sideproject.gugumo.redis.RedisUtil;
+import sideproject.gugumo.page.redis.RedisUtil;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
