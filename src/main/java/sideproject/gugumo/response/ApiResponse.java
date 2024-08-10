@@ -10,6 +10,7 @@ import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Schema(description = "API 응답")
 public class ApiResponse<T> {
 
     private static final String SUCCESS_STATUS = "success";
