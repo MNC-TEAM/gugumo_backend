@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApiResponse<T> {
@@ -16,7 +18,7 @@ public class ApiResponse<T> {
 
     @Schema(description = "성공 실패 여부", allowableValues = {"success, fail"})
     private String status;
-    @Schema(description = "응답 데이터", implementation = Object.class)
+    @Schema(description = "응답 데이터", subTypes = Objects.class)
     private T data;
     @Schema(description = "응답 및 에러 메시지")
     private String message;
