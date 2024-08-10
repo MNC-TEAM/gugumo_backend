@@ -54,7 +54,7 @@ public class PostController {
                                                                              value = "{\"status\" : \"success\", \"data\" : \"글 작성 완료\", \"message\" : null}"
                                                                      ))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "게시글 저장 권한 없음",
-                                                                    content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                                                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                                                      examples = @ExampleObject(
                                                                              value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"저장 실패: 게시글 저장 권한이 없습니다.\"}"
                                                                      )))
@@ -196,12 +196,12 @@ public class PostController {
                                                 """
                                 ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"조회 실패: 권한이 없습니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "게시글이 존재하지 않음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"조회 실패: 해당 게시글이 존재하지 않습니다.\"}"
                                     )))
@@ -224,17 +224,17 @@ public class PostController {
                                             value = "{\"status\" : \"success\", \"data\" : \"글 갱신 완료\", \"message\" : null}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"수정 실패: 비로그인 사용자입니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "게시글 수정 권한 없음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"수정 실패: 게시글 수정 권한이 없습니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "게시글이 존재하지 않음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"수정 실패: 해당 게시글이 존재하지 않습니다.\"}"
                                     )))
@@ -258,17 +258,17 @@ public class PostController {
                                             value = "{\"status\" : \"success\", \"data\" : \"글 삭제 완료\", \"message\" : null}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"삭제 실패: 비로그인 사용자입니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "게시글 삭제 권한 없음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"삭제 실패: 게시글 삭제 권한이 없습니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "게시글이 존재하지 않음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"삭제 실패: 해당 게시글이 존재하지 않습니다.\"}"
                                     )))
@@ -341,12 +341,12 @@ public class PostController {
                                             """
                             ))),
                 @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
-                        content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                 examples = @ExampleObject(
                                         value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"내 글 조회 실패: 비로그인 사용자입니다.\"}"
                                 ))),
                 @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "내 글 조회 권한 없음",
-                        content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                 examples = @ExampleObject(
                                         value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"내 글 조회 실패: 접근 권한이 없습니다.\"}"
                                 )))
@@ -418,7 +418,7 @@ public class PostController {
                                                     """
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "추천글 조회 권한 없음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"추천글 조회 실패: 권한이 없습니다.\"}"
                                     )))
