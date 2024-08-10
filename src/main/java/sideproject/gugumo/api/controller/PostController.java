@@ -194,7 +194,18 @@ public class PostController {
                                                     "message": null
                                                 }
                                                 """
-                                )))
+                                ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"조회 실패: 권한이 없습니다.\"}"
+                                    ))),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "게시글이 존재하지 않음",
+                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"조회 실패: 해당 게시글이 존재하지 않습니다.\"}"
+                                    )))
+
             })
     public <T extends DetailPostDto> ApiResponse<T> findPostDetail(
             @AuthenticationPrincipal CustomUserDetails principal,
