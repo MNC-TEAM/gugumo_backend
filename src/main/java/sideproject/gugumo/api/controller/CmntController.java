@@ -34,7 +34,7 @@ public class CmntController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "댓글 등록", description = "댓글을 등록합니다.",
             responses = {
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "댓글 등록 완료",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "댓글 등록 완료",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"success\", \"data\" : \"댓글 저장 완료\", \"message\" : null}"
