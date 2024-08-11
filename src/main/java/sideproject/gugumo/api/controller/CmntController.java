@@ -19,6 +19,7 @@ import sideproject.gugumo.request.CreateCmntReq;
 import sideproject.gugumo.request.UpdateCmntReq;
 import sideproject.gugumo.response.ApiResponse;
 import sideproject.gugumo.service.CmntService;
+import sideproject.gugumo.swagger.CmntDtoResponse;
 
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class CmntController {
     @Operation(summary = "댓글 조회", description = "해당 게시글에 해당하는 댓글을 조회합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "댓글 정보",
-                            content=@Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                            content=@Content(mediaType = "application/json", schema = @Schema(implementation = CmntDtoResponse.class),
                                     examples = @ExampleObject(value = """
                                             {
                                                   "status": "success",
