@@ -34,12 +34,12 @@ public class FcmNotificationTokenController {
                                             value = "{\"status\" : \"success\", \"data\" : \"북마크 생성 완료\", \"message\" : null}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"토큰 저장 실패: 비로그인 사용자입니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"토큰 저장 실패: 권한이 없습니다.\"}"
                                     )))
