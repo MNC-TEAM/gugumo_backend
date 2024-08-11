@@ -41,22 +41,22 @@ public class BookmarkController {
                                             value = "{\"status\" : \"success\", \"data\" : \"북마크 생성 완료\", \"message\" : null}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "북마크 중복 등록",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 등록 실패: 이미 등록된 북마크입니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 등록 실패: 비로그인 사용자입니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "북마크 등록 권한 없음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 등록 실패: 권한이 없습니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "게시글이 존재하지 않음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 등록 실패: 해당 게시글이 존재하지 않습니다.\"}"
                                     )))
@@ -133,22 +133,22 @@ public class BookmarkController {
                                             value = "{\"status\" : \"success\", \"data\" : \"북마크 삭제 완료\", \"message\" : null}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 삭제 실패: 비로그인 사용자입니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "북마크 삭제 권한 없음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 삭제 실패: 권한이 없습니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "북마크가 존재하지 않음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 삭제 실패: 해당 북마크가 존재하지 않습니다.\"}"
                                     ))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "게시글이 존재하지 않음",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"북마크 삭제 실패: 해당 게시글이 존재하지 않습니다.\"}"
                                     )))
