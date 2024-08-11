@@ -21,6 +21,8 @@ import sideproject.gugumo.page.PageCustom;
 import sideproject.gugumo.request.CreateBookmarkReq;
 import sideproject.gugumo.response.ApiResponse;
 import sideproject.gugumo.service.BookmarkService;
+import sideproject.gugumo.swagger.simplepostdtoresponse.SimplePostLongDtoResponse;
+import sideproject.gugumo.swagger.simplepostdtoresponse.SimplePostShortDtoResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -74,7 +76,7 @@ public class BookmarkController {
     @Operation(summary = "북마크 조회", description = "북마크한 게시글을 조회합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "북마크 게시글",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {SimplePostShortDtoResponse.class, SimplePostLongDtoResponse.class}),
                                     examples = @ExampleObject(
                                             value = """
                                                     {
