@@ -22,10 +22,8 @@ public class SwaggerConfig {
         String jwt = "Authorization";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwt);
         Components components = new Components().addSecuritySchemes(jwt, new SecurityScheme()
-                .name(jwt)
                 .type(SecurityScheme.Type.HTTP)
-                .in(SecurityScheme.In.HEADER)
-                .scheme("Bearer")
+                .scheme("bearer")
                 .bearerFormat("JWT")
         );
 
