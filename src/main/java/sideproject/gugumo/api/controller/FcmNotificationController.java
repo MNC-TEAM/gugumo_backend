@@ -35,36 +35,35 @@ public class FcmNotificationController {
                             content=@Content(mediaType = "application/json", schema = @Schema(oneOf = {PostCustomNotiDtoResponse.class}),
                                     examples = @ExampleObject(value = """
                                             {
-                                                   "status": "success",
-                                                   "data": [
-                                                       {
-                                                           "id": 652,
-                                                           "content": "testComment",
-                                                           "notificationType": "COMMENT",
-                                                           "createDate": "2024-06-13T19:30:35.40451",
-                                                           "postId": 1,
-                                                           "read": false
-                                                       },
-                                                       {
-                                                           "id": 605,
-                                                           "content": "testComment",
-                                                           "notificationType": "COMMENT",
-                                                           "createDate": "2024-06-13T03:27:17.082465",
-                                                           "postId": 1,
-                                                           "read": false
-                                                       },
-                                                       {
-                                                           "id": 604,
-                                                           "content": "testComment",
-                                                           "notificationType": "COMMENT",
-                                                           "createDate": "2024-06-13T03:27:13.773505",
-                                                           "postId": 1,
-                                                           "read": false
-                                                       },
-                                                       ...
-                                                      ],
-                                                 "message": null
-                                                 }
+                                                "status": "success",
+                                                "data": [
+                                                    {
+                                                        "id": 652,
+                                                        "content": "testComment",
+                                                        "notificationType": "COMMENT",
+                                                        "createDate": "2024-06-13T19:30:35.40451",
+                                                        "postId": 1,
+                                                        "read": false
+                                                    },
+                                                    {
+                                                        "id": 605,
+                                                        "content": "testComment",
+                                                        "notificationType": "COMMENT",
+                                                        "createDate": "2024-06-13T03:27:17.082465",
+                                                        "postId": 1,
+                                                        "read": false
+                                                    },
+                                                    {
+                                                        "id": 604,
+                                                        "content": "testComment",
+                                                        "notificationType": "COMMENT",
+                                                        "createDate": "2024-06-13T03:27:13.773505",
+                                                        "postId": 1,
+                                                        "read": false
+                                                    }
+                                                   ],
+                                              "message": null
+                                              }
                                                                             """))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
