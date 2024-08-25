@@ -65,16 +65,16 @@ public class FcmNotificationController {
                                               "message": null
                                               }
                                                                             """))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 실패",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 조회 실패: 비로그인 사용자입니다.\"}"
-                                    ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 조회 실패: 권한이 없습니다.\"}"
-                                    )))
+                                    examples = {
+                                            @ExampleObject(name = "비로그인 사용자",
+                                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 조회 실패: 비로그인 사용자입니다.\"}"
+                                                    ),
+                                            @ExampleObject(name = "권한 없음",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 조회 실패: 권한이 없습니다.\"}"
+                                            )
+                                    }))
             })
     public <T extends CustomNotiDto> ApiResponse<List<T>> findNoti(@AuthenticationPrincipal CustomUserDetails principal) {
         return ApiResponse.createSuccess(fcmNotificationService.findNotification(principal));
@@ -89,16 +89,16 @@ public class FcmNotificationController {
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"success\", \"data\" : \"알림 읽음처리 완료\", \"message\" : null}"
                                     ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 실패",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 읽음처리 실패: 비로그인 사용자입니다.\"}"
-                                    ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 읽음처리 실패: 권한이 없습니다.\"}"
-                                    ))),
+                                    examples = {
+                                            @ExampleObject(name = "비로그인 사용자",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 읽음처리 실패: 비로그인 사용자입니다.\"}"
+                                            ),
+                                            @ExampleObject(name = "권한 없음",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 읽음처리 실패: 권한이 없습니다.\"}"
+                                            )
+                                    })),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 알림",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
@@ -119,16 +119,16 @@ public class FcmNotificationController {
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"success\", \"data\" : \"알림 모두 읽음처리 완료\", \"message\" : null}"
                                     ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 실패",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 모두 읽음처리 실패: 비로그인 사용자입니다.\"}"
-                                    ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
+                                    examples = {
+                                            @ExampleObject(name = "비로그인 사용자",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 모두 읽음처리 실패: 비로그인 사용자입니다.\"}"
+                                            ),
+                                            @ExampleObject(name = "권한 없음",
                                             value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 모두 읽음처리 실패: 권한이 없습니다.\"}"
-                                    )))
+                                    )
+                                    }))
             })
     public ApiResponse<String> readAll(@AuthenticationPrincipal CustomUserDetails principal) {
 
@@ -144,16 +144,17 @@ public class FcmNotificationController {
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"success\", \"data\" : \"알림 삭제 완료\", \"message\" : null}"
                                     ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 실패",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 삭제 실패: 비로그인 사용자입니다.\"}"
-                                    ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 삭제 실패: 권한이 없습니다.\"}"
-                                    ))),
+                                    examples = {
+                                            @ExampleObject(name = "비로그인 사용자",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 삭제 실패: 비로그인 사용자입니다.\"}"
+                                            ),
+                                            @ExampleObject(name = "권한 없음",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"알림 삭제 실패: 권한이 없습니다.\"}"
+                                            )
+
+                                    })),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 알림",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
@@ -162,6 +163,7 @@ public class FcmNotificationController {
             })
     public ApiResponse<String> deleteNoti(@AuthenticationPrincipal CustomUserDetails principal,
                                           @PathVariable("noti_id") Long id) {
+
         fcmNotificationService.deleteNotification(principal, id);
 
         return ApiResponse.createSuccess("알림 삭제 완료");
@@ -176,18 +178,19 @@ public class FcmNotificationController {
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"success\", \"data\" : \"읽은 알림 삭제 완료\", \"message\" : null}"
                                     ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 실패",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"읽은 알림 삭제 실패: 비로그인 사용자입니다.\"}"
-                                    ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "권한 없음",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"읽은 알림 삭제 실패: 권한이 없습니다.\"}"
-                                    )))
+                                    examples = {
+                                            @ExampleObject(name = "비로그인 사용자",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"읽은 알림 삭제 실패: 비로그인 사용자입니다.\"}"
+                                            ),
+                                            @ExampleObject(name = "권한 없음",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"읽은 알림 삭제 실패: 권한이 없습니다.\"}"
+                                            )
+                                    })),
             })
     public ApiResponse<String> deleteReadNoti(@AuthenticationPrincipal CustomUserDetails principal) {
+
         fcmNotificationService.deleteReadNotification(principal);
 
         return ApiResponse.createSuccess("읽은 알림 삭제 완료");

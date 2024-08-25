@@ -72,7 +72,7 @@ public class MemberApiController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "입력이 올바르지 못함",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                     examples = {
-                            @ExampleObject(
+                            @ExampleObject(name = "올바르지 못한 입력",
                                     value = """
                                             {
                                                 "status": "fail",
@@ -82,7 +82,7 @@ public class MemberApiController {
                                                                                         
                                             """
                             ),
-                            @ExampleObject(
+                            @ExampleObject(name = "이메일 인증 에러",
                             value = """
                                     {
                                           "status": "fail",
@@ -93,7 +93,7 @@ public class MemberApiController {
                                                                                         
                                     """
                             ),
-                            @ExampleObject(
+                            @ExampleObject(name = "닉네임 중복",
                             value = """
                                     {
                                            "status": "fail",

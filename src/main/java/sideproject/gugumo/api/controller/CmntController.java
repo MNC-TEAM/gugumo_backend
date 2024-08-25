@@ -40,16 +40,16 @@ public class CmntController {
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"success\", \"data\" : \"댓글 저장 완료\", \"message\" : null}"
                                     ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 실패",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 등록 실패: 비로그인 사용자입니다.\"}"
-                                    ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "댓글 등록 권한 없음",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 등록 실패: 권한이 없습니다.\"}"
-                                    ))),
+                                    examples = {
+                                            @ExampleObject(name = "비로그인 사용자",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 등록 실패: 비로그인 사용자입니다.\"}"
+                                            ),
+                                            @ExampleObject(name = "권한 없음",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 등록 실패: 권한이 없습니다.\"}"
+                                            )
+                                    })),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "댓글이 존재하지 않음",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
@@ -58,6 +58,7 @@ public class CmntController {
             })
     public ApiResponse<String> saveComment(@AuthenticationPrincipal CustomUserDetails principal,
                                            @Valid @RequestBody CreateCmntReq req) {
+
         cmntService.save(req, principal);
 
         return ApiResponse.createSuccess("댓글 저장 완료");
@@ -144,16 +145,16 @@ public class CmntController {
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"success\", \"data\" : \"댓글 갱신 완료\", \"message\" : null}"
                                     ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 실패",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 갱신 실패: 비로그인 사용자입니다.\"}"
-                                    ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "댓글 수정 권한 없음",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 갱신 실패: 권한이 없습니다.\"}"
-                                    ))),
+                                    examples = {
+                                            @ExampleObject(name = "비로그인 사용자",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 갱신 실패: 비로그인 사용자입니다.\"}"
+                                            ),
+                                            @ExampleObject(name = "권한 없음",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 갱신 실패: 권한이 없습니다.\"}"
+                                            )
+                                    })),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "댓글이 존재하지 않음",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
@@ -179,16 +180,16 @@ public class CmntController {
                                     examples = @ExampleObject(
                                             value = "{\"status\" : \"success\", \"data\" : \"댓글 삭제 완료\", \"message\" : null}"
                                     ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "비로그인 사용자",
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 실패",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 삭제 실패: 비로그인 사용자입니다.\"}"
-                                    ))),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "댓글 삭제 권한 없음",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
-                                    examples = @ExampleObject(
-                                            value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 삭제 실패: 삭제 권한이 없습니다.\"}"
-                                    ))),
+                                    examples = {
+                                            @ExampleObject(name = "비로그인 사용자",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 삭제 실패: 비로그인 사용자입니다.\"}"
+                                            ),
+                                            @ExampleObject(name = "권한 없음",
+                                                    value = "{\"status\" : \"fail\", \"data\" : null, \"message\" : \"댓글 삭제 실패: 삭제 권한이 없습니다.\"}"
+                                            )
+                                    })),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "댓글이 존재하지 않음",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                                     examples = @ExampleObject(
