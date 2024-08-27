@@ -56,6 +56,7 @@ public class PostService {
     /**
      * 단기모집 기준: meetingDate, meetingTime 반영(default)
      * 장기모집일 경우 meetingDays(요일), meetingTime(1970/1/1을 쓰레기값으로)을 반영해야함
+     *
      * @param createPostReq
      */
     @Transactional
@@ -66,7 +67,7 @@ public class PostService {
          */
 
         //if principal==null->로그인을 하지 않아 principal 이 없음->권한이 없습니다 exception
-        Member author = checkMemberValid(principal, "저장 실패: 게시글 저장 권한이 없습니다.", "저장 실패: 게시글 저장 권한이 없습니다.");
+        Member author = checkMemberValid(principal, "저장 실패: 비로그인 사용자입니다.", "저장 실패: 게시글 저장 권한이 없습니다.");
 
 
         //post 저장
@@ -80,7 +81,7 @@ public class PostService {
 
         Meeting meeting;
 
-        if(MeetingType.valueOf(createPostReq.getMeetingType())==MeetingType.SHORT){
+        if (MeetingType.valueOf(createPostReq.getMeetingType()) == MeetingType.SHORT) {
             meeting = Meeting.builder()
                     .meetingType(MeetingType.valueOf(createPostReq.getMeetingType()))
                     .gameType(GameType.valueOf(createPostReq.getGameType()))
@@ -99,7 +100,7 @@ public class PostService {
                     .meetingType(MeetingType.valueOf(createPostReq.getMeetingType()))
                     .gameType(GameType.valueOf(createPostReq.getGameType()))
                     .location(Location.valueOf(createPostReq.getLocation()))
-                    .meetingDateTime(LocalDate.of(1970,1,1).atStartOfDay().plusHours(createPostReq.getMeetingTime()))       //장기모임의 경우 date를 무시
+                    .meetingDateTime(LocalDate.of(1970, 1, 1).atStartOfDay().plusHours(createPostReq.getMeetingTime()))       //장기모임의 경우 date를 무시
                     .meetingDays(createPostReq.getMeetingDays())
                     .meetingDeadline(createPostReq.getMeetingDeadline())
                     .meetingMemberNum(createPostReq.getMeetingMemberNum())
@@ -115,7 +116,6 @@ public class PostService {
     }
 
     /**
-     *
      * @param meetingDate
      * @param meetingTime: int로 간주->추후 협의 후 수정될 수 있음
      * @return
@@ -128,6 +128,7 @@ public class PostService {
     /**
      * 동적 쿼리를 이용하여 게시글의 정보를 반환
      * post.title, meeting.location, meeting.gametype, page번호를 확인해야함
+     *
      * @return page
      */
 
@@ -169,14 +170,13 @@ public class PostService {
     }
 
 
-
     //장기, 단기에 따라 dto를 나눠서 전송
     @Transactional          //viewCount++가 동작하므로 readonly=false
     public <T extends DetailPostDto> T findDetailPostByPostId(CustomUserDetails principal, Long postId) {
 
 
         Post targetPost = postRepository.findByIdAndIsDeleteFalse(postId)
-                .orElseThrow(()->new PostNotFoundException("조회 실패: 해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new PostNotFoundException("조회 실패: 해당 게시글이 존재하지 않습니다."));
 
 
         Meeting targetMeeting = targetPost.getMeeting();
@@ -258,8 +258,8 @@ public class PostService {
         //토큰에서
         Member member = checkMemberValid(principal, "수정 실패: 비로그인 사용자입니다.", "수정 실패: 게시글 수정 권한이 없습니다.");
 
-        Post targetPost =postRepository.findByIdAndIsDeleteFalse(postId)
-                .orElseThrow(()->new PostNotFoundException("수정 실패: 해당 게시글이 존재하지 않습니다."));
+        Post targetPost = postRepository.findByIdAndIsDeleteFalse(postId)
+                .orElseThrow(() -> new PostNotFoundException("수정 실패: 해당 게시글이 존재하지 않습니다."));
 
         //post의 member 동일인 여부 확인
         if (!targetPost.getMember().equals(member)) {
@@ -273,6 +273,7 @@ public class PostService {
         targetMeeting.update(updatePostReq);
 
     }
+
     @Transactional
     public void deletePost(CustomUserDetails principal, Long postId) {
 
@@ -280,7 +281,7 @@ public class PostService {
         Member member = checkMemberValid(principal, "삭제 실패: 비로그인 사용자입니다.", "삭제 실패: 게시글 삭제 권한이 없습니다.");
 
         Post targetPost = postRepository.findByIdAndIsDeleteFalse(postId)
-                .orElseThrow(()->new PostNotFoundException("삭제 실패: 해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new PostNotFoundException("삭제 실패: 해당 게시글이 존재하지 않습니다."));
 
         //post의 member 동일인 여부 확인
         if (!targetPost.getMember().equals(member)) {
@@ -374,7 +375,6 @@ public class PostService {
                     .build();
 
 
-
         } else if (s.getMeetingType() == MeetingType.LONG) {
             result = SimplePostLongDto.builder()
                     .postId(s.getPostId())
@@ -390,55 +390,12 @@ public class PostService {
                     .build();
 
 
-
-
         }
 
         return (T) result;
     }
 
-    private <T extends SimplePostDto> T convertToTransDto(Post post, Member member) {
 
-        Meeting meeting = post.getMeeting();
-
-        SimplePostDto result = new SimplePostDto();
-
-        if (post.getMeeting().getMeetingType() == MeetingType.SHORT) {
-            result = SimplePostShortDto.builder()
-                    .postId(post.getId())
-                    .meetingStatus(meeting.getStatus())
-                    .gameType(meeting.getGameType())
-                    .location(meeting.getLocation())
-                    .title(post.getTitle())
-                    .meetingMemberNum(meeting.getMeetingMemberNum())
-                    .meetingDeadline(meeting.getMeetingDeadline())
-                    .isBookmarked(bookmarkRepository.existsByMemberAndPost(member, post))
-                    .meetingDateTime(meeting.getMeetingDateTime())
-                    .build();
-
-
-
-        } else if (post.getMeeting().getMeetingType() == MeetingType.LONG) {
-            result = SimplePostLongDto.builder()
-                    .postId(post.getId())
-                    .meetingStatus(meeting.getStatus())
-                    .gameType(meeting.getGameType())
-                    .location(meeting.getLocation())
-                    .title(post.getTitle())
-                    .meetingMemberNum(meeting.getMeetingMemberNum())
-                    .meetingDeadline(meeting.getMeetingDeadline())
-                    .isBookmarked(bookmarkRepository.existsByMemberAndPost(member, post))
-                    .meetingTime(meeting.getMeetingDateTime().toLocalTime())
-                    .meetingDays(meeting.getMeetingDays())
-                    .build();
-
-
-
-
-        }
-        return (T) result;
-
-    }
 
 
 }
