@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sideproject.gugumo.adaptor.MemberChecker;
 import sideproject.gugumo.domain.dto.customnotidto.CustomNotiDto;
 import sideproject.gugumo.domain.dto.customnotidto.PostCustomNotiDto;
 import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.entity.notification.CustomNoti;
 import sideproject.gugumo.domain.entity.notification.NotificationType;
 import sideproject.gugumo.domain.entity.member.Member;
-import sideproject.gugumo.domain.entity.member.MemberStatus;
 import sideproject.gugumo.exception.exception.NoAuthorizationException;
 import sideproject.gugumo.exception.exception.NotificationNotFoundException;
 import sideproject.gugumo.repository.CustomNotiRepository;
@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FcmNotificationService {
 
+
+    private final MemberChecker memberChecker;
     private final FcmNotificationTokenRepository fcmNotificationTokenRepository;
     private final MemberRepository memberRepository;
     private final CustomNotiRepository customNotiRepository;
@@ -31,9 +33,7 @@ public class FcmNotificationService {
 
     public <T extends CustomNotiDto> List<T> findNotification(@AuthenticationPrincipal CustomUserDetails principal) {
 
-        Member member = checkMemberValid(principal, "알림 조회 실패: 비로그인 사용자입니다.",
-                "알림 조회 실패: 권한이 없습니다.");
-
+        Member member = memberChecker.toMember(principal, "알림 조회 실패");
         List<CustomNoti> result = customNotiRepository.findByMemberOrderByCreateDateDesc(member);
 
         return result.stream()
@@ -61,8 +61,7 @@ public class FcmNotificationService {
 
     @Transactional
     public void read(CustomUserDetails principal, Long id) {
-        Member member = checkMemberValid(principal, "알림 읽음처리 실패: 비로그인 사용자입니다.",
-                "알림 읽음처리 실패: 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal,"알림 읽음처리 실패");
 
         CustomNoti notification = customNotiRepository.findById(id).orElseThrow(
                 () -> new NotificationNotFoundException("알림 읽음처리 실패: 존재하지 않는 알림입니다.")
@@ -78,8 +77,7 @@ public class FcmNotificationService {
 
     @Transactional
     public void readAll(CustomUserDetails principal) {
-        Member member = checkMemberValid(principal, "알림 모두 읽음처리 실패: 비로그인 사용자입니다.",
-                "알림 모두 읽음처리 실패: 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal, "알림 모두 읽음처리 실패");
 
         List<CustomNoti> notifications = customNotiRepository.findByMemberOrderByCreateDateDesc(member);
 
@@ -91,8 +89,7 @@ public class FcmNotificationService {
 
     @Transactional
     public void deleteNotification(CustomUserDetails principal, Long id) {
-        Member member = checkMemberValid(principal, "알림 삭제 실패: 비로그인 사용자입니다.",
-                "알림 삭제 실패: 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal, "알림 삭제 실패");
 
         CustomNoti notification = customNotiRepository.findById(id).orElseThrow(
                 ()->new NotificationNotFoundException("알림 삭제 실패: 존재하지 않는 알림입니다.")
@@ -104,25 +101,11 @@ public class FcmNotificationService {
 
     @Transactional
     public void deleteReadNotification(CustomUserDetails principal) {
-        Member member = checkMemberValid(principal, "읽은 알림 삭제 실패: 비로그인 사용자입니다.", "읽은 알림 삭제 실패: 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal, "읽은 알림 삭제 실패");
 
         customNotiRepository.deleteAllByMemberAndIsReadTrue(member);
         
     }
 
-    private Member checkMemberValid(CustomUserDetails principal, String noLoginMessage, String notValidUserMessage) {
-        if (principal == null) {
-            throw new NoAuthorizationException(noLoginMessage);
-        }
 
-        Member author = memberRepository.findOne(principal.getId())
-                .orElseThrow(
-                        () -> new NoAuthorizationException(notValidUserMessage)
-                );
-
-        if (author.getStatus() != MemberStatus.active) {
-            throw new NoAuthorizationException(notValidUserMessage);
-        }
-        return author;
-    }
 }

@@ -6,9 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sideproject.gugumo.adaptor.MemberChecker;
 import sideproject.gugumo.domain.entity.Bookmark;
 import sideproject.gugumo.domain.entity.member.Member;
-import sideproject.gugumo.domain.entity.member.MemberStatus;
 import sideproject.gugumo.domain.entity.meeting.Meeting;
 import sideproject.gugumo.domain.entity.meeting.MeetingType;
 import sideproject.gugumo.domain.entity.post.Post;
@@ -16,7 +16,6 @@ import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.dto.simplepostdto.SimplePostLongDto;
 import sideproject.gugumo.domain.dto.simplepostdto.SimplePostDto;
 import sideproject.gugumo.domain.dto.simplepostdto.SimplePostShortDto;
-import sideproject.gugumo.exception.exception.NoAuthorizationException;
 import sideproject.gugumo.exception.exception.BookmarkNotFoundException;
 import sideproject.gugumo.exception.exception.DuplicateBookmarkException;
 import sideproject.gugumo.exception.exception.PostNotFoundException;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookmarkService {
 
-
+    private final MemberChecker memberChecker;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
@@ -42,7 +41,7 @@ public class BookmarkService {
     @Transactional
     public void save(CustomUserDetails principal, CreateBookmarkReq req) {
 
-        Member member = checkMemberValid(principal, "북마크 등록 실패: 비로그인 사용자입니다.", "북마크 등록 실패: 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal, "북마크 등록 실패");
 
         Post post = postRepository.findByIdAndIsDeleteFalse(req.getPostId())
                 .orElseThrow(()->new PostNotFoundException("북마크 등록 실패: 해당 게시글이 존재하지 않습니다."));
@@ -63,7 +62,7 @@ public class BookmarkService {
     public <T extends SimplePostDto> PageCustom<T> findBookmarkByMember(
             CustomUserDetails principal, Pageable pageable, String q) {
 
-        Member member = checkMemberValid(principal, "북마크 조회 실패: 비로그인 사용자입니다.", "북마크 조회 실패: 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal, "북마크 조회 실패");
 
         Page<Bookmark> page = bookmarkRepository.findInBookmark(member, q, pageable);
 
@@ -121,7 +120,7 @@ public class BookmarkService {
     @Transactional
     public void delete(Long postId, CustomUserDetails principal) {
 
-        Member member = checkMemberValid(principal, "북마크 삭제 실패: 비로그인 사용자입니다.", "북마크 삭제 실패: 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal, "북마크 삭제 실패");
 
 
         Post targetPost = postRepository.findByIdAndIsDeleteFalse(postId)
@@ -136,20 +135,6 @@ public class BookmarkService {
         bookmarkRepository.delete(bookmark);
     }
 
-    private Member checkMemberValid(CustomUserDetails principal, String noLoginMessage, String notValidUserMessage) {
-        if (principal == null) {
-            throw new NoAuthorizationException(noLoginMessage);
-        }
 
-        Member member = memberRepository.findOne(principal.getId())
-                .orElseThrow(
-                        () -> new NoAuthorizationException(notValidUserMessage)
-                );
-
-        if (member.getStatus() != MemberStatus.active) {
-            throw new NoAuthorizationException(notValidUserMessage);
-        }
-        return member;
-    }
 
 }

@@ -3,11 +3,10 @@ package sideproject.gugumo.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sideproject.gugumo.adaptor.MemberChecker;
 import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.entity.notification.FcmNotificationToken;
 import sideproject.gugumo.domain.entity.member.Member;
-import sideproject.gugumo.domain.entity.member.MemberStatus;
-import sideproject.gugumo.exception.exception.NoAuthorizationException;
 import sideproject.gugumo.repository.FcmNotificationTokenRepository;
 import sideproject.gugumo.repository.MemberRepository;
 import sideproject.gugumo.request.FcmTokenDto;
@@ -16,6 +15,7 @@ import sideproject.gugumo.request.FcmTokenDto;
 @RequiredArgsConstructor
 public class FcmNotificationTokenService {
 
+    private final MemberChecker memberChecker;
     private final FcmNotificationTokenRepository fcmNotificationTokenRepository;
     private final MemberRepository memberRepository;
 
@@ -23,8 +23,7 @@ public class FcmNotificationTokenService {
     @Transactional
     public void subscribe(CustomUserDetails principal, FcmTokenDto fcmTokenDto) {
 
-        Member member = checkMemberValid(principal, "토큰 저장 실패: 비로그인 사용자입니다.",
-                "토큰 저장 실패: 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal, "FCM 토큰 등록 실패");
 
         //token이 있으면->createDate update?
         if (fcmNotificationTokenRepository.existsByToken(fcmTokenDto.getFcmToken())) {
@@ -46,20 +45,6 @@ public class FcmNotificationTokenService {
 
     }
 
-    private Member checkMemberValid(CustomUserDetails principal, String noLoginMessage, String notValidUserMessage) {
-        if (principal == null) {
-            throw new NoAuthorizationException(noLoginMessage);
-        }
 
-        Member author = memberRepository.findOne(principal.getId())
-                .orElseThrow(
-                        () -> new NoAuthorizationException(notValidUserMessage)
-                );
-
-        if (author.getStatus() != MemberStatus.active) {
-            throw new NoAuthorizationException(notValidUserMessage);
-        }
-        return author;
-    }
 
 }

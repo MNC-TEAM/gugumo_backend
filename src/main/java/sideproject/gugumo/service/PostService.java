@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sideproject.gugumo.adaptor.MemberChecker;
 import sideproject.gugumo.cond.PostSearchCondition;
 import sideproject.gugumo.cond.SortType;
 import sideproject.gugumo.domain.dto.simplepostdto.SimplePostQueryDto;
@@ -33,7 +34,6 @@ import sideproject.gugumo.request.UpdatePostReq;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PostService {
 
+    private final MemberChecker memberChecker;
     private final PostRepository postRepository;
     private final MeetingRepository meetingRepository;
     private final MemberRepository memberRepository;
@@ -67,7 +68,7 @@ public class PostService {
          */
 
         //if principal==null->로그인을 하지 않아 principal 이 없음->권한이 없습니다 exception
-        Member author = checkMemberValid(principal, "저장 실패: 비로그인 사용자입니다.", "저장 실패: 게시글 저장 권한이 없습니다.");
+        Member author = memberChecker.toMember(principal, "저장 실패");
 
 
         //post 저장
@@ -256,7 +257,7 @@ public class PostService {
     @Transactional
     public void update(CustomUserDetails principal, Long postId, UpdatePostReq updatePostReq) {
         //토큰에서
-        Member member = checkMemberValid(principal, "수정 실패: 비로그인 사용자입니다.", "수정 실패: 게시글 수정 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal, "수정 실패: ");
 
         Post targetPost = postRepository.findByIdAndIsDeleteFalse(postId)
                 .orElseThrow(() -> new PostNotFoundException("수정 실패: 해당 게시글이 존재하지 않습니다."));
@@ -278,7 +279,7 @@ public class PostService {
     public void deletePost(CustomUserDetails principal, Long postId) {
 
         //토큰에서
-        Member member = checkMemberValid(principal, "삭제 실패: 비로그인 사용자입니다.", "삭제 실패: 게시글 삭제 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal, "삭제 실패");
 
         Post targetPost = postRepository.findByIdAndIsDeleteFalse(postId)
                 .orElseThrow(() -> new PostNotFoundException("삭제 실패: 해당 게시글이 존재하지 않습니다."));
@@ -299,7 +300,7 @@ public class PostService {
     public <T extends SimplePostDto> PageCustom<T> findMyPost(CustomUserDetails principal, Pageable pageable, String q) {
 
         //토큰에서
-        Member member = checkMemberValid(principal, "내 글 조회 실패: 비로그인 사용자입니다.", "내 글 조회 실패: 접근 권한이 없습니다.");
+        Member member = memberChecker.toMember(principal, "내 글 조회 실패");
 
 
         Page<SimplePostQueryDto> page = postRepository.searchMy(pageable, member, q);
@@ -340,22 +341,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    private Member checkMemberValid(CustomUserDetails principal, String noLoginMessage, String notValidUserMessage) {
-        if (principal == null) {
-            throw new NoAuthorizationException(noLoginMessage);
-        }
 
-        //토큰에서
-        Member author = memberRepository.findOne(principal.getId())
-                .orElseThrow(
-                        () -> new NoAuthorizationException(notValidUserMessage)
-                );
-
-        if (author.getStatus() != MemberStatus.active) {
-            throw new NoAuthorizationException(notValidUserMessage);
-        }
-        return author;
-    }
 
     private <T extends SimplePostDto> T convertToTransDto(SimplePostQueryDto s) {
 
