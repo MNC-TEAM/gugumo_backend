@@ -20,19 +20,14 @@ import sideproject.gugumo.service.PostService;
 import java.util.List;
 
 
-/**
- * /api/v1이 중복
- * 묶고 싶은데...
- * 커스텀 어노테이션: @RequestMapping("/meeting")과의 순서 보장? 애초에 실행은 되는가?
- */
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/meeting")
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/new")
+    @PostMapping("/api/v1/meeting/new")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<String> save(@AuthenticationPrincipal CustomUserDetails principal,
                                     @RequestBody @Valid CreatePostReq createPostReq) {
@@ -46,7 +41,7 @@ public class PostController {
      * 정렬(Sort)은 조건이 조금만 복잡해져도 Pageable의 Sort기능을 사용하기 어렵다. 루트 엔티티 범위를 넘어가는(join을 하는 등)
      * 동적 정렬 기능이 필요하면 스프링 데이터 페이징이 제공하는 Sort를 사용하기 보다는 파라미터를 받아서 직접 처리하는 것을 권장한다.
      */
-    @GetMapping
+    @GetMapping("/api/v1/meeting")
     public <T extends SimplePostDto> ApiResponse<PageCustom<T>> findPostSimple(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PageableDefault(size=12) Pageable pageable,
@@ -60,7 +55,7 @@ public class PostController {
 
         return ApiResponse.createSuccess(postService.findSimplePost(principal, pageable, q, gameType, location, meetingStatus, sortType));
     }
-    @GetMapping("/{post_id}")
+    @GetMapping("/api/v1/meeting/{post_id}")
     public <T extends DetailPostDto> ApiResponse<T> findPostDetail(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable("post_id") Long postId) {
@@ -69,7 +64,7 @@ public class PostController {
         return ApiResponse.createSuccess((T)detailPostDto);
     }
 
-    @PatchMapping("/{post_id}")
+    @PatchMapping("/api/v1/meeting/{post_id}")
     public ApiResponse<String> updatePost(@AuthenticationPrincipal CustomUserDetails principal,
                                              @PathVariable("post_id") Long postId,
                                              @RequestBody @Valid UpdatePostReq updatePostReq) {
@@ -79,7 +74,7 @@ public class PostController {
     }
 
 
-    @DeleteMapping("/{post_id}")
+    @DeleteMapping("/api/v1/meeting/{post_id}")
     public ApiResponse<String> deletePost(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable("post_id") Long postId) {
@@ -90,7 +85,7 @@ public class PostController {
     }
 
 
-    @GetMapping("/my")
+    @GetMapping("/api/v1/meeting/my")
     public <T extends SimplePostDto> ApiResponse<PageCustom<T>> findMyPost(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PageableDefault(size=12, sort="createDate", direction = Sort.Direction.DESC) Pageable pageable,
@@ -99,7 +94,7 @@ public class PostController {
 
     }
 
-    @GetMapping("/recommend")
+    @GetMapping("/api/v1/meeting/recommend")
     public <T extends SimplePostDto> ApiResponse<List<T>> findRecommendPost(
             @AuthenticationPrincipal CustomUserDetails principal) {
         return ApiResponse.createSuccess(postService.findRecommendPost(principal));

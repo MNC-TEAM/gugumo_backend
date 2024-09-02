@@ -14,12 +14,11 @@ import sideproject.gugumo.service.FcmNotificationTokenService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
 public class FcmNotificationTokenController {
 
     private final FcmNotificationTokenService fcmNotificationTokenService;
 
-    @PostMapping("/subscribe")
+    @PostMapping("/api/v1/subscribe")
     public ApiResponse<String> subscribe(@AuthenticationPrincipal CustomUserDetails principal,
                                          @Valid @RequestBody FcmTokenDto fcmTokenDto) {
 

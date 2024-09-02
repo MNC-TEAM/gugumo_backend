@@ -24,7 +24,7 @@ public class BookmarkController {
     private final BookmarkService bookmarkService;
 
 
-    @PostMapping("/new")
+    @PostMapping("/api/v1/bookmark/new")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<String> saveBookmark(
             @AuthenticationPrincipal CustomUserDetails principal,
@@ -35,7 +35,7 @@ public class BookmarkController {
         return ApiResponse.createSuccess("북마크 생성 완료");
     }
 
-    @GetMapping
+    @GetMapping("/api/v1/bookmark")
     public <T extends SimplePostDto> ApiResponse<PageCustom<T>> findBookmark(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PageableDefault(size = 12, sort="id", direction = Sort.Direction.DESC) Pageable pageable,
@@ -44,7 +44,7 @@ public class BookmarkController {
         return ApiResponse.createSuccess(bookmarkService.findBookmarkByMember(principal, pageable, q));
     }
 
-    @DeleteMapping("/{bookmark_id}")
+    @DeleteMapping("/api/v1/bookmark/{bookmark_id}")
     public ApiResponse<String> deleteBookmark(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable("bookmark_id") Long bookmarkId) {

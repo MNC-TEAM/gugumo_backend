@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
 public class FcmNotificationController {
 
 
@@ -21,12 +20,12 @@ public class FcmNotificationController {
 
 
     //몇개?
-    @GetMapping("/notification")
+    @GetMapping("/api/v1/notification")
     public <T extends CustomNotiDto> ApiResponse<List<T>> findNoti(@AuthenticationPrincipal CustomUserDetails principal) {
         return ApiResponse.createSuccess(fcmNotificationService.findNotification(principal));
     }
 
-    @PatchMapping("/notification/read/{noti_id}")
+    @PatchMapping("/api/v1/notification/read/{noti_id}")
     public ApiResponse<String> read(@AuthenticationPrincipal CustomUserDetails principal,
                                     @PathVariable("noti_id") Long id) {
 
@@ -34,14 +33,14 @@ public class FcmNotificationController {
         return ApiResponse.createSuccess("알림 읽음처리 완료");
     }
 
-    @PatchMapping("/notification/read")
+    @PatchMapping("/api/v1/notification/read")
     public ApiResponse<String> readAll(@AuthenticationPrincipal CustomUserDetails principal) {
 
         fcmNotificationService.readAll(principal);
         return ApiResponse.createSuccess("알림 모두 읽음처리 완료");
     }
 
-    @DeleteMapping("/notification/{noti_id}")
+    @DeleteMapping("/api/v1/notification/{noti_id}")
     public ApiResponse<String> deleteNoti(@AuthenticationPrincipal CustomUserDetails principal,
                                           @PathVariable("noti_id") Long id) {
         fcmNotificationService.deleteNotification(principal, id);
@@ -50,7 +49,7 @@ public class FcmNotificationController {
     }
 
 
-    @DeleteMapping("/notification/read")
+    @DeleteMapping("/api/v1/notification/read")
     public ApiResponse<String> deleteReadNoti(@AuthenticationPrincipal CustomUserDetails principal) {
         fcmNotificationService.deleteReadNotification(principal);
 
