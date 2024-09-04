@@ -26,8 +26,12 @@ public class MeetingScheduler {
 
         LocalDate today = LocalDate.now();
 
+        List<Meeting> targetMeeting = meetingRepository.findByMeetingDeadlineBeforeAndStatus(today, MeetingStatus.RECRUIT);
 
-        meetingRepository.expireMeetingStatus(today);
+
+        for (Meeting meeting : targetMeeting) {
+            meeting.expireStatus();
+        }
 
 
     }
