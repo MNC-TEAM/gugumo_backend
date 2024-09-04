@@ -24,7 +24,12 @@ public class FCMTokenScheduler {
         LocalDateTime expire = LocalDateTime.now().minusMonths(2);
 
 
-        fcmNotificationTokenRepository.deleteExpiredToken(expire);
+        List<FcmNotificationToken> expiredTokens = fcmNotificationTokenRepository.findByLastUsedDateBefore(expire);
+
+        for (FcmNotificationToken expiredToken : expiredTokens) {
+
+            fcmNotificationTokenRepository.deleteById(expiredToken.getId());
+        }
 
 
     }

@@ -27,11 +27,7 @@ public interface FcmNotificationTokenRepository extends JpaRepository<FcmNotific
     public void deleteAllByToken(@Param("token") String token);
 
     public List<FcmNotificationToken> findByMember(Member member);
-    
 
-
-    @Modifying(clearAutomatically = true)
-    @Query("delete from FcmNotificationToken t where t.lastUsedDate<:expire")
-    int deleteExpiredToken(LocalDateTime expire);
+    public List<FcmNotificationToken> findByLastUsedDateBefore(LocalDateTime expire);
 
 }
