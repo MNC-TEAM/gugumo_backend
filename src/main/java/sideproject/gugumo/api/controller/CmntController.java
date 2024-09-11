@@ -17,7 +17,6 @@ import sideproject.gugumo.service.CmntService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/comment")
 @RequiredArgsConstructor
 public class CmntController {
 

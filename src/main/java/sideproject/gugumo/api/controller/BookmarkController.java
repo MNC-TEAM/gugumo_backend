@@ -18,7 +18,6 @@ import sideproject.gugumo.service.BookmarkService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/bookmark")
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
