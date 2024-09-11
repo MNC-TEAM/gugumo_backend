@@ -342,7 +342,6 @@ public class PostService {
     }
 
 
-
     private <T extends SimplePostDto> T convertToTransDto(SimplePostQueryDto s) {
 
         SimplePostDto result = new SimplePostDto();
@@ -380,8 +379,6 @@ public class PostService {
 
         return (T) result;
     }
-
-
 
 
 }

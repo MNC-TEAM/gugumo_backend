@@ -31,8 +31,6 @@ public class CmntRepositoryImpl implements CmntRepositoryCustom {
     public List<CmntDto> findComment(Long postId, Member user) {
 
 
-
-
         //isYours, isAuthorExpired 추가
         List<CmntDto> result = queryFactory.select(new QCmntDto(
                         cmnt.id,

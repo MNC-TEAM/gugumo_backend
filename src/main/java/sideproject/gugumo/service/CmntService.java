@@ -47,7 +47,7 @@ public class CmntService {
         //삭제된 댓글의 대댓글도 작성할 수 있어야 함->deleteFalse를 확인하지 않음
         Cmnt parentCmnt = req.getParentCommentId() != null ?
                 cmntRepository.findById(req.getParentCommentId())
-                        .orElseThrow(()-> new CommentNotFoundException("대댓글의 상위 댓글이 존재하지 않습니다.")) : null;
+                        .orElseThrow(() -> new CommentNotFoundException("대댓글의 상위 댓글이 존재하지 않습니다.")) : null;
 
         Cmnt cmnt = Cmnt.builder()
                 .post(targetPost)
@@ -119,8 +119,6 @@ public class CmntService {
         cmnt.getPost().decreaseCommentCnt();
 
     }
-
-
 
 
 }

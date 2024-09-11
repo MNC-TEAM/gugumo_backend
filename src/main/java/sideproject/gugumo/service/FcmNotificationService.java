@@ -61,7 +61,7 @@ public class FcmNotificationService {
 
     @Transactional
     public void read(CustomUserDetails principal, Long id) {
-        Member member = memberChecker.toMember(principal,"알림 읽음처리 실패");
+        Member member = memberChecker.toMember(principal, "알림 읽음처리 실패");
 
         CustomNoti notification = customNotiRepository.findById(id).orElseThrow(
                 () -> new NotificationNotFoundException("알림 읽음처리 실패: 존재하지 않는 알림입니다.")
@@ -92,7 +92,7 @@ public class FcmNotificationService {
         Member member = memberChecker.toMember(principal, "알림 삭제 실패");
 
         CustomNoti notification = customNotiRepository.findById(id).orElseThrow(
-                ()->new NotificationNotFoundException("알림 삭제 실패: 존재하지 않는 알림입니다.")
+                () -> new NotificationNotFoundException("알림 삭제 실패: 존재하지 않는 알림입니다.")
         );
 
         customNotiRepository.delete(notification);
@@ -104,7 +104,7 @@ public class FcmNotificationService {
         Member member = memberChecker.toMember(principal, "읽은 알림 삭제 실패");
 
         customNotiRepository.deleteAllByMemberAndIsReadTrue(member);
-        
+
     }
 
 
