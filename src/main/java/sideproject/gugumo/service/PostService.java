@@ -306,8 +306,7 @@ public class PostService {
         Page<SimplePostQueryDto> page = postRepository.searchMy(pageable, member, q);
 
         List<T> result = page.stream()
-                .map(p -> convertToTransDto(p))
-                .map(r -> (T) r)
+                .map(p -> (T) convertToTransDto(p))
                 .collect(Collectors.toList());
 
         return new PageCustom<>(result, page.getPageable(), page.getTotalElements());
@@ -336,8 +335,7 @@ public class PostService {
 
 
         return recommendPost.stream()
-                .map(p -> convertToTransDto(p))
-                .map(r -> (T) r)
+                .map(p -> (T) convertToTransDto(p))
                 .collect(Collectors.toList());
     }
 
