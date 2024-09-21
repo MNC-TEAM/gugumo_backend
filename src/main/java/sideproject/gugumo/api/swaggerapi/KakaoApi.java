@@ -11,7 +11,7 @@ import sideproject.gugumo.domain.dto.memberDto.SignUpKakaoMemberDto;
 import sideproject.gugumo.response.ApiResponse;
 
 public interface KakaoApi {
-    @PostMapping("kakao/login")
+
     @Operation(summary = "카카오 로그인", description = "카카오 계정으로 로그인합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "해당 사용자에 대한 access token",
@@ -29,7 +29,7 @@ public interface KakaoApi {
             })
     public ApiResponse<String> login(@RequestBody KakaoLoginRequestDto kakaoLoginRequestDto);
 
-    @PostMapping("/api/v1/kakao/member")
+
     @Operation(summary = "카카오 회원가입", description = "카카오 계정으로 회원가입을 진행합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "카카오 회원가입 완료",
