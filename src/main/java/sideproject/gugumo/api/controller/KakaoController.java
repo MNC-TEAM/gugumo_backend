@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import sideproject.gugumo.api.swaggerapi.KakaoApi;
 import sideproject.gugumo.domain.dto.memberDto.KakaoLoginRequestDto;
 import sideproject.gugumo.domain.dto.memberDto.KakaoUserInfoResponseDto;
 import sideproject.gugumo.domain.dto.memberDto.SignUpKakaoMemberDto;
@@ -18,7 +19,7 @@ import sideproject.gugumo.service.MemberService;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Kakao")
-public class KakaoController {
+public class KakaoController implements KakaoApi {
 
     private final KakaoService kakaoService;
     private final MemberService memberService;
