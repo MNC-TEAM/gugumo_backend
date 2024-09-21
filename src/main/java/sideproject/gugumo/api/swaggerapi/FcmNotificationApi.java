@@ -18,7 +18,7 @@ import java.util.List;
 
 public interface FcmNotificationApi {
 
-    @GetMapping("/notification")
+
     @Operation(summary = "알림 조회", description = "알림을 조회합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "알림 정보",
@@ -69,7 +69,7 @@ public interface FcmNotificationApi {
     public <T extends CustomNotiDto> ApiResponse<List<T>> findNoti(@AuthenticationPrincipal CustomUserDetails principal);
 
 
-    @PatchMapping("/notification/read/{noti_id}")
+
     @Operation(summary = "알림 읽음처리", description = "알림 하나를 읽음처리 합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "알림 읽음처리",
@@ -96,7 +96,7 @@ public interface FcmNotificationApi {
     public ApiResponse<String> read(@AuthenticationPrincipal CustomUserDetails principal,
                                     @PathVariable("noti_id") Long id);
 
-    @PatchMapping("/notification/read")
+
     @Operation(summary = "알림 모두 읽음처리", description = "해당 유저의 모든 알림을 읽음처리 합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "알림 모두 읽음처리",
@@ -117,7 +117,7 @@ public interface FcmNotificationApi {
             })
     public ApiResponse<String> readAll(@AuthenticationPrincipal CustomUserDetails principal);
 
-    @DeleteMapping("/notification/{noti_id}")
+
     @Operation(summary = "알림 삭제", description = "알림 하나를 삭제합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "알림 삭제",
@@ -146,7 +146,7 @@ public interface FcmNotificationApi {
                                           @PathVariable("noti_id") Long id);
 
 
-    @DeleteMapping("/notification/read")
+
     @Operation(summary = "읽은 알림 삭제", description = "해당 유저의 모든 읽은 알림을 삭제합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "읽은 알림 삭제",

@@ -21,8 +21,8 @@ import sideproject.gugumo.swagger.simplepostdtoresponse.SimplePostLongDtoRespons
 import sideproject.gugumo.swagger.simplepostdtoresponse.SimplePostShortDtoResponse;
 
 public interface BookmarkApi {
-    @PostMapping("/new")
-    @ResponseStatus(HttpStatus.CREATED)
+
+
     @Operation(summary = "북마크 등록", description = "북마크를 등록합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "북마크 생성 완료",
@@ -56,7 +56,7 @@ public interface BookmarkApi {
             @AuthenticationPrincipal CustomUserDetails principal,
             @RequestBody @Valid CreateBookmarkReq createBookmarkReq);
 
-    @GetMapping
+
     @Operation(summary = "북마크 조회", description = "북마크한 게시글을 조회합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "북마크 게시글",
@@ -107,7 +107,7 @@ public interface BookmarkApi {
             @PageableDefault(size = 12, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(required = false, value = "q", defaultValue = "") @Parameter(description = "검색어") String q);
 
-    @DeleteMapping("/{bookmark_id}")
+
     @Operation(summary = "북마크 삭제", description = "북마크를 삭제합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "북마크 삭제 완료",

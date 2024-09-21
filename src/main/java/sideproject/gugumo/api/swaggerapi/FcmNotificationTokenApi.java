@@ -14,7 +14,7 @@ import sideproject.gugumo.response.ApiResponse;
 
 public interface FcmNotificationTokenApi {
 
-    @PostMapping("/subscribe")
+
     @Operation(summary = "FCM 토큰 저장 및 갱신", description = "FCM 토큰을 저장 및 갱신합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "토큰 저장 완료",

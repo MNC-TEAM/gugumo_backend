@@ -19,7 +19,7 @@ import sideproject.gugumo.swagger.CmntDtoResponse;
 import java.util.List;
 
 public interface CmntApi {
-    @PostMapping("/new")
+
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "댓글 등록", description = "댓글을 등록합니다.",
             responses = {
@@ -47,7 +47,7 @@ public interface CmntApi {
     public ApiResponse<String> saveComment(@AuthenticationPrincipal CustomUserDetails principal,
                                            @Valid @RequestBody CreateCmntReq req);
 
-    @GetMapping("/{post_id}")
+
     @Operation(summary = "댓글 조회", description = "해당 게시글에 해당하는 댓글을 조회합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "댓글 정보",
@@ -116,7 +116,7 @@ public interface CmntApi {
     public ApiResponse<List<CmntDto>> findComment(@AuthenticationPrincipal CustomUserDetails principal,
                                                   @PathVariable("post_id") @Parameter(description = "게시글 고유번호") Long postId);
 
-    @PatchMapping("/{comment_id}")
+
     @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "댓글 갱신 완료",
@@ -145,7 +145,7 @@ public interface CmntApi {
                                              @PathVariable("comment_id") @Parameter(description = "댓글 고유 번호") Long commentId,
                                              @RequestBody UpdateCmntReq req);
 
-    @DeleteMapping("/{comment_id}")
+
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "댓글 삭제 완료",

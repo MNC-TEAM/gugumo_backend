@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import sideproject.gugumo.api.swaggerapi.MemberApi;
 import sideproject.gugumo.domain.dto.memberDto.*;
 import sideproject.gugumo.response.ApiResponse;
 import sideproject.gugumo.service.MailSenderService;
@@ -20,7 +21,7 @@ import sideproject.gugumo.swagger.MemberInfoDtoResponse;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Member")
-public class MemberApiController {
+public class MemberApiController implements MemberApi {
 
     private final MemberService memberService;
     private final MailSenderService mailService;
