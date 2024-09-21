@@ -1,37 +1,24 @@
-package sideproject.gugumo.api.controller;
+package sideproject.gugumo.api.swaggerapi;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import sideproject.gugumo.api.swaggerapi.CmntApi;
 import sideproject.gugumo.domain.dto.CmntDto;
 import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.request.CreateCmntReq;
 import sideproject.gugumo.request.UpdateCmntReq;
 import sideproject.gugumo.response.ApiResponse;
-import sideproject.gugumo.service.CmntService;
 import sideproject.gugumo.swagger.CmntDtoResponse;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/v1/comment")
-@RequiredArgsConstructor
-@Tag(name = "Cmnt")
-public class CmntController implements CmntApi {
-
-    private final CmntService cmntService;
-
+public interface CmntApi {
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "댓글 등록", description = "댓글을 등록합니다.",
@@ -58,19 +45,13 @@ public class CmntController implements CmntApi {
                                     )))
             })
     public ApiResponse<String> saveComment(@AuthenticationPrincipal CustomUserDetails principal,
-                                           @Valid @RequestBody CreateCmntReq req) {
-
-        cmntService.save(req, principal);
-
-        return ApiResponse.createSuccess("댓글 저장 완료");
-
-    }
+                                           @Valid @RequestBody CreateCmntReq req);
 
     @GetMapping("/{post_id}")
     @Operation(summary = "댓글 조회", description = "해당 게시글에 해당하는 댓글을 조회합니다.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "댓글 정보",
-                            content=@Content(mediaType = "application/json", schema = @Schema(implementation = CmntDtoResponse.class),
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CmntDtoResponse.class),
                                     examples = @ExampleObject(value = """
                                             {
                                                   "status": "success",
@@ -133,10 +114,7 @@ public class CmntController implements CmntApi {
                                                                             """)))
             })
     public ApiResponse<List<CmntDto>> findComment(@AuthenticationPrincipal CustomUserDetails principal,
-                                                  @PathVariable("post_id") @Parameter(description = "게시글 고유번호") Long postId) {
-
-        return ApiResponse.createSuccess(cmntService.findComment(postId, principal));
-    }
+                                                  @PathVariable("post_id") @Parameter(description = "게시글 고유번호") Long postId);
 
     @PatchMapping("/{comment_id}")
     @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.",
@@ -165,13 +143,7 @@ public class CmntController implements CmntApi {
             })
     public ApiResponse<String> updateComment(@AuthenticationPrincipal CustomUserDetails principal,
                                              @PathVariable("comment_id") @Parameter(description = "댓글 고유 번호") Long commentId,
-                                             @RequestBody UpdateCmntReq req) {
-
-        cmntService.updateComment(commentId, req, principal);
-
-        return ApiResponse.createSuccess("댓글 갱신 완료");
-
-    }
+                                             @RequestBody UpdateCmntReq req);
 
     @DeleteMapping("/{comment_id}")
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.",
@@ -198,10 +170,5 @@ public class CmntController implements CmntApi {
                                     )))
             })
     public ApiResponse<String> deleteComment(@AuthenticationPrincipal CustomUserDetails principal,
-                                             @PathVariable("comment_id") @Parameter(description = "댓글 고유 번호") Long commentId) {
-        cmntService.deleteComment(commentId, principal);
-
-        return ApiResponse.createSuccess("댓글 삭제 완료");
-
-    }
+                                             @PathVariable("comment_id") @Parameter(description = "댓글 고유 번호") Long commentId);
 }
