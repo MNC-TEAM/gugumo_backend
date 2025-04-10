@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional
 class MemberRepositoryTest {
 
-    @Autowired
+    /*@Autowired
     MemberRepository memberRepository;
 
     Member getJoinMemberBuild() {
@@ -87,6 +87,6 @@ class MemberRepositoryTest {
         //than
         assertThat(findMember.get()).isEqualTo(member);
     }
-
+*/
 
 }

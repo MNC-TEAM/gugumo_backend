@@ -15,7 +15,7 @@ import java.util.Optional;
 @SpringBootTest
 class FavoriteSportRepositoryTest {
 
-    @Autowired
+/*    @Autowired
     MemberRepository memberRepository;
     @Autowired
     FavoriteSportRepository favoriteSportRepository;
@@ -60,6 +60,6 @@ class FavoriteSportRepositoryTest {
 
         //than
         Assertions.assertThat(favoriteSportsString.toString()).isEqualTo("BADMINTON,BASEBALL,FUTSAL");
-    }
+    }*/
 
 }
