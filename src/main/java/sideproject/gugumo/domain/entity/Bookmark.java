@@ -11,6 +11,7 @@ import sideproject.gugumo.domain.entity.post.Post;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Table(indexes = @Index(name = "bookmark_idx_member_id_post_id", columnList = "member_id, post_id"))
 public class Bookmark {
 
     @Id

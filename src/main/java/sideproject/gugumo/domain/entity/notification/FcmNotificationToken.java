@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(indexes = @Index(name = "fcm_notification_idx_member_id", columnList = "member_id"))
 public class FcmNotificationToken {
 
     @Id

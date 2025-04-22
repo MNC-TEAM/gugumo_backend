@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Getter
+@Table(indexes = @Index(name = "post_idx_member_id", columnList = "member_id"))
 public class Post {
 
     @Id

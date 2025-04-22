@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(indexes = {@Index(name = "cmnt_idx_post_id", columnList = "post_id")
+                    , @Index(name = "cmnt_idx_parent_cmnt_id",columnList = "parent_cmnt_id")})
 public class Cmnt {
 
     @Id

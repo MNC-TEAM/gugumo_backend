@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = @Index(name = "custom_noti_idx_member_id", columnList = "member_id"))
 public class CustomNoti {
 
     @Id
