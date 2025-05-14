@@ -68,4 +68,11 @@ public class GlobalExceptionHandler {
         log.error("[handleMethodArgumentNotValidException] ex : " + e.getMessage());
         return ApiResponse.createFail(e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ApiException.class)
+    public ApiResponse<String> handleApiException(ApiException e, String message) {
+        log.error("[{}}] ex : {}" , Thread.currentThread().getStackTrace()[1].getMethodName(), message);
+        return ApiResponse.createFail(message);
+    }
 }
