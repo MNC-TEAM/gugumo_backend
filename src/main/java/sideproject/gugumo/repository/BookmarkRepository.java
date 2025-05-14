@@ -15,7 +15,10 @@ import java.util.Optional;
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
-    @Query("select b from Bookmark b where b.member=:member and (b.post.title like concat('%', :q, '%') or b.post.content like concat('%', :q, '%'))")
+    @Query("select b from Bookmark b" +
+            " join fetch b.post" +
+            " join fetch b.post.meeting" +
+            " where b.member=:member and (b.post.title like concat('%', :q, '%') or b.post.content like concat('%', :q, '%'))")
     public Page<Bookmark> findInBookmark(@Param("member") Member member, @Param("q") String q, Pageable pageable);
 
     public Optional<Bookmark> findByMemberAndPost(Member member, Post post);

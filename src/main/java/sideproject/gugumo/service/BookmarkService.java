@@ -2,10 +2,12 @@ package sideproject.gugumo.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 import sideproject.gugumo.adaptor.MemberChecker;
 import sideproject.gugumo.domain.entity.Bookmark;
 import sideproject.gugumo.domain.entity.member.Member;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class BookmarkService {
 
     private final MemberChecker memberChecker;
@@ -64,8 +67,8 @@ public class BookmarkService {
 
         Member member = memberChecker.toMember(principal, "북마크 조회 실패");
 
-        Page<Bookmark> page = bookmarkRepository.findInBookmark(member, q, pageable);
 
+        Page<Bookmark> page = bookmarkRepository.findInBookmark(member, q, pageable);
 
         List<T> result = page.stream()
                 .map(p -> convertToTransDto(p.getPost(), member))
