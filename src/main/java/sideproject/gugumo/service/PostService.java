@@ -10,18 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 import sideproject.gugumo.adaptor.MemberChecker;
 import sideproject.gugumo.cond.PostSearchCondition;
 import sideproject.gugumo.cond.SortType;
-import sideproject.gugumo.domain.dto.simplepostdto.SimplePostQueryDto;
-import sideproject.gugumo.domain.entity.member.MemberStatus;
-import sideproject.gugumo.domain.entity.meeting.*;
-import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.dto.detailpostdto.DetailPostDto;
-import sideproject.gugumo.domain.entity.member.Member;
-import sideproject.gugumo.domain.entity.post.Post;
 import sideproject.gugumo.domain.dto.detailpostdto.LongDetailPostDto;
 import sideproject.gugumo.domain.dto.detailpostdto.ShortDetailPostDto;
-import sideproject.gugumo.domain.dto.simplepostdto.SimplePostLongDto;
+import sideproject.gugumo.domain.dto.memberDto.CustomUserDetails;
 import sideproject.gugumo.domain.dto.simplepostdto.SimplePostDto;
+import sideproject.gugumo.domain.dto.simplepostdto.SimplePostLongDto;
+import sideproject.gugumo.domain.dto.simplepostdto.SimplePostQueryDto;
 import sideproject.gugumo.domain.dto.simplepostdto.SimplePostShortDto;
+import sideproject.gugumo.domain.entity.meeting.*;
+import sideproject.gugumo.domain.entity.member.Member;
+import sideproject.gugumo.domain.entity.member.MemberStatus;
+import sideproject.gugumo.domain.entity.post.Post;
 import sideproject.gugumo.exception.exception.NoAuthorizationException;
 import sideproject.gugumo.exception.exception.PostNotFoundException;
 import sideproject.gugumo.page.PageCustom;
@@ -71,59 +71,23 @@ public class PostService {
         Member author = memberChecker.toMember(principal, "저장 실패");
 
 
+        Meeting meeting = createPostReq.toEntity(author);
+
+        meetingRepository.save(meeting);
+
+
         //post 저장
         Post post = Post.builder()
                 .title(createPostReq.getTitle())
                 .content(createPostReq.getContent())
                 .member(author)
+                .meeting(meeting)
                 .build();
 
         postRepository.save(post);
 
-        Meeting meeting;
-
-        if (MeetingType.valueOf(createPostReq.getMeetingType()) == MeetingType.SHORT) {
-            meeting = Meeting.builder()
-                    .meetingType(MeetingType.valueOf(createPostReq.getMeetingType()))
-                    .gameType(GameType.valueOf(createPostReq.getGameType()))
-                    .location(Location.valueOf(createPostReq.getLocation()))
-                    .meetingDateTime(mergeDatetime(createPostReq.getMeetingDate(), createPostReq.getMeetingTime()))
-                    .meetingDeadline(createPostReq.getMeetingDeadline())
-                    .meetingMemberNum(createPostReq.getMeetingMemberNum())
-                    .openKakao(createPostReq.getOpenKakao())
-                    .member(author)
-                    .build();
-
-            meeting.setPost(post);
-            meetingRepository.save(meeting);
-        } else if (MeetingType.valueOf(createPostReq.getMeetingType()) == MeetingType.LONG) {
-            meeting = Meeting.builder()
-                    .meetingType(MeetingType.valueOf(createPostReq.getMeetingType()))
-                    .gameType(GameType.valueOf(createPostReq.getGameType()))
-                    .location(Location.valueOf(createPostReq.getLocation()))
-                    .meetingDateTime(LocalDate.of(1970, 1, 1).atStartOfDay().plusHours(createPostReq.getMeetingTime()))       //장기모임의 경우 date를 무시
-                    .meetingDays(createPostReq.getMeetingDays())
-                    .meetingDeadline(createPostReq.getMeetingDeadline())
-                    .meetingMemberNum(createPostReq.getMeetingMemberNum())
-                    .openKakao(createPostReq.getOpenKakao())
-                    .member(author)
-                    .build();
-
-            meeting.setPost(post);
-            meetingRepository.save(meeting);
-        }
-
-
     }
 
-    /**
-     * @param meetingDate
-     * @param meetingTime: int로 간주->추후 협의 후 수정될 수 있음
-     * @return
-     */
-    private LocalDateTime mergeDatetime(LocalDate meetingDate, int meetingTime) {
-        return meetingDate.atStartOfDay().plusHours(meetingTime);
-    }
 
 
     /**
